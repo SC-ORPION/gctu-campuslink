@@ -7,12 +7,12 @@ const HostelCard = ({ hostel }) => {
   const [currentImage, setCurrentImage] = useState(0);
   const images = hostel.images || [];
 
-  // Autoplay every 2 seconds
+  // Autoplay every 5 seconds
   useEffect(() => {
     if (images.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 2000);
+    }, 5000);
     return () => clearInterval(interval);
   }, [images.length]);
 

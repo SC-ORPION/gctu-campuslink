@@ -24,6 +24,15 @@ const HostelDetail = () => {
     fetchHostel();
   }, [id]);
 
+  // Auto-advance gallery every 5 seconds
+  useEffect(() => {
+    if (!hostel || !hostel.images || hostel.images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % hostel.images.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [hostel]);
+
   const handleReportSubmit = async (e) => {
     e.preventDefault();
     setReporting(true);
