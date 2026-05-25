@@ -1,24 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
   /* Color System */
-  --primary: #1d4ed8;
-  --primary-hover: #1e40af;
-  --secondary: #14b8a6;
-  --secondary-hover: #0d9488;
-  --background: #f8fafc;
-  --surface: #ffffff;
-  --text: #0f172a;
-  --text-muted: #64748b;
-  --success: #22c55e;
+  --primary: #2563eb;           /* Institutional primary blue */
+  --primary-hover: #1d4ed8;     /* Deep action blue */
+  --secondary: #0ea5e9;         /* Sky accent */
+  --secondary-hover: #0284c7;
+  --background: #f8fafc;        /* Soft gray base slate */
+  --surface: #ffffff;           /* Crisp pure white cards */
+  --text: #0f172a;              /* Slate-900 high contrast text */
+  --text-muted: #64748b;        /* Slate-500 muted text */
+  --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
-  --border: #e2e8f0;
+  --border: #f1f5f9;            /* Ultra thin slate borders */
 
   /* Elevation */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
 
   /* Radius */
   --radius-md: 12px;
@@ -125,6 +129,124 @@ button:active {
   .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
 }
 
+@media (min-width: 640px) {
+  .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (min-width: 1024px) {
   .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* Premium App Shell Layout & Sidebar Structure */
+.app-layout-shell {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--background);
+}
+
+.app-sidebar {
+  width: 260px;
+  background-color: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 50;
+}
+
+.app-main-content {
+  flex: 1;
+  margin-left: 260px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+@media (max-width: 1023px) {
+  .app-sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+  .app-sidebar.open {
+    transform: translateX(0);
+  }
+  .app-main-content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+}
+
+/* Dense Operational Tables & Indicators */
+.dense-table-wrapper {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.dense-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.825rem;
+  font-weight: 500;
+}
+
+.dense-table th {
+  background-color: #f8fafc;
+  color: var(--text-muted);
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  border-bottom: 1.5px solid var(--border);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dense-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.dense-table tr:hover {
+  background-color: #f8fafc/50;
+}
+
+/* Loading Skeletons */
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 6px;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* UI Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.725rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.badge-primary { background-color: #eff6ff; color: #2563eb; }
+.badge-success { background-color: #ecfdf5; color: #10b981; }
+.badge-warning { background-color: #fffbeb; color: #f59e0b; }
+.badge-danger { background-color: #fef2f2; color: #ef4444; }
+

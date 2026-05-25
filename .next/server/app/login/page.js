@@ -1,0 +1,13 @@
+var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/login/page.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0lc0s_k._.js")
+R.c("server/chunks/ssr/0.yg_next_dist_esm_build_templates_app-page_0d6~ho2.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0ak2n~n._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0cb4esb._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__02o2jh9._.js")
+R.c("server/chunks/ssr/0.yg_next_dist_client_components_01tldz3._.js")
+R.c("server/chunks/ssr/0.yg_next_dist_client_components_builtin_forbidden_0cly42h.js")
+R.c("server/chunks/ssr/0.yg_next_dist_client_components_builtin_unauthorized_0ge~48v.js")
+R.c("server/chunks/ssr/0.yg_next_dist_client_components_builtin_global-error_093_4r1.js")
+R.c("server/chunks/ssr/03ci_Documents_gctu hostels__next-internal_server_app_login_page_actions_0tbqp5i.js")
+R.m(7980)
+module.exports=R.m(7980).exports

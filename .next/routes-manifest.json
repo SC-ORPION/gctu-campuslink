@@ -1,0 +1,188 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "onMatchHeaders": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/booking/[hostelId]",
+      "regex": "^/booking/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPhostelId": "nxtPhostelId"
+      },
+      "namedRegex": "^/booking/(?<nxtPhostelId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/hostels/[id]",
+      "regex": "^/hostels/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/hostels/(?<nxtPid>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/admin/allocation",
+      "regex": "^/admin/allocation(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/allocation(?:/)?$"
+    },
+    {
+      "page": "/admin/dashboard",
+      "regex": "^/admin/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/dashboard(?:/)?$"
+    },
+    {
+      "page": "/admin/incidents",
+      "regex": "^/admin/incidents(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/incidents(?:/)?$"
+    },
+    {
+      "page": "/admin/payments",
+      "regex": "^/admin/payments(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/payments(?:/)?$"
+    },
+    {
+      "page": "/admin/students",
+      "regex": "^/admin/students(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/students(?:/)?$"
+    },
+    {
+      "page": "/api/admin/allocation",
+      "regex": "^/api/admin/allocation(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/allocation(?:/)?$"
+    },
+    {
+      "page": "/api/admin/hostels",
+      "regex": "^/api/admin/hostels(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/hostels(?:/)?$"
+    },
+    {
+      "page": "/api/admin/payments/verify",
+      "regex": "^/api/admin/payments/verify(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/payments/verify(?:/)?$"
+    },
+    {
+      "page": "/api/student/booking",
+      "regex": "^/api/student/booking(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/student/booking(?:/)?$"
+    },
+    {
+      "page": "/api/student/payment",
+      "regex": "^/api/student/payment(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/student/payment(?:/)?$"
+    },
+    {
+      "page": "/blocked",
+      "regex": "^/blocked(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/blocked(?:/)?$"
+    },
+    {
+      "page": "/hostels",
+      "regex": "^/hostels(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hostels(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/register",
+      "regex": "^/register(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/register(?:/)?$"
+    },
+    {
+      "page": "/student/dashboard",
+      "regex": "^/student/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/student/dashboard(?:/)?$"
+    },
+    {
+      "page": "/student/payment",
+      "regex": "^/student/payment(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/student/payment(?:/)?$"
+    },
+    {
+      "page": "/student/profile",
+      "regex": "^/student/profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/student/profile(?:/)?$"
+    },
+    {
+      "page": "/student/room",
+      "regex": "^/student/room(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/student/room(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}
