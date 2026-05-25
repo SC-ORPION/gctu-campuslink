@@ -55,7 +55,7 @@ export default function Navbar() {
         <div className="nav-content">
           <Link href="/" className="logo">
             <div className="logo-icon-wrapper overflow-hidden p-0.5">
-              <img src="/src/assets/gctu-logo.jpg" alt="GCTU Crest" className="w-full h-full object-cover rounded-[10px]" />
+              <img src="/assets/gctu-logo.jpg" alt="GCTU Crest" className="w-full h-full object-cover rounded-[10px]" />
             </div>
             <div className="logo-text">
               <span className="brand-name">GCTU</span>

@@ -204,7 +204,7 @@ export default function Home() {
         <div className="container nav-content">
           <div className="brand-logo" onClick={() => handleToggleState(false)}>
             <div className="w-8 h-8 rounded-lg overflow-hidden border border-slate-100 flex-shrink-0">
-              <img src="/src/assets/gctu-logo.jpg" alt="GCTU" className="w-full h-full object-cover" />
+              <img src="/assets/gctu-logo.jpg" alt="GCTU" className="w-full h-full object-cover" />
             </div>
             <span>CampusLink</span>
           </div>

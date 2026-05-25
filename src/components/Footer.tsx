@@ -12,7 +12,7 @@ export default function Footer() {
           <div className="footer-brand">
             <Link href="/" className="footer-logo">
               <div className="w-9 h-9 rounded-lg overflow-hidden border border-slate-700 p-0.5 flex-shrink-0 bg-white">
-                <img src="/src/assets/gctu-logo.jpg" alt="GCTU Crest" className="w-full h-full object-cover" />
+                <img src="/assets/gctu-logo.jpg" alt="GCTU Crest" className="w-full h-full object-cover" />
               </div>
               <span>GCTU CampusLink</span>
             </Link>

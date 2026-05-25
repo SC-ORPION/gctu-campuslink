@@ -71,7 +71,7 @@ export default function HostelCard({ hostel }: HostelCardProps) {
         <AnimatePresence mode="wait">
           <motion.img 
             key={currentImage}
-            src={images[currentImage] || (hostel.name.toLowerCase().includes('gate') ? '/src/assets/gctu-gate.jpg' : hostel.name.toLowerCase().includes('admin') ? '/src/assets/gctu-admin.jpg' : hostel.name.toLowerCase().includes('reception') ? '/src/assets/gctu-reception.jpg' : '/src/assets/gctu-building.jpg')} 
+            src={images[currentImage] || (hostel.name.toLowerCase().includes('gate') ? '/assets/gctu-gate.jpg' : hostel.name.toLowerCase().includes('admin') ? '/assets/gctu-admin.jpg' : hostel.name.toLowerCase().includes('reception') ? '/assets/gctu-reception.jpg' : '/assets/gctu-building.jpg')} 
             alt={hostel.name}
             className="h-full w-full object-cover"
             initial={{ opacity: 0 }}
