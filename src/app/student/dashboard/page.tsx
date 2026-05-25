@@ -112,52 +112,69 @@ export default function StudentDashboardPage() {
           actionHref="/hostels"
         />
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* 2. Pipeline tracker */}
           <BookingProgress currentStatus={booking.status} />
 
           {/* 3. Operational Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <StatusCard 
-              title="Hostel Booking" 
-              statusText={booking.status} 
-              badgeType={booking.status === 'ALLOCATED' ? 'success' : 'warning'} 
+              title="Hostel Allocation Request" 
+              statusText={
+                booking.status === 'PENDING_PAYMENT' ? 'Hostel Locked (Selection Finalized)' :
+                booking.status === 'PENDING_VERIFICATION' ? 'Payment Pending Verification' :
+                booking.status === 'CONFIRMED' ? 'Allocation Queued' :
+                booking.status === 'ALLOCATED' ? 'Allocation Confirmed' : 'Booking Revoked'
+              } 
+              badgeType={
+                booking.status === 'ALLOCATED' ? 'success' :
+                booking.status === 'CANCELLED' ? 'danger' : 'warning'
+              } 
               explanation={
                 booking.status === 'PENDING_PAYMENT' 
-                  ? `Selection locked: ${booking.hostels?.name}. Complete your payment validation within 24 hours.`
-                  : `Booking confirmed at ${booking.hostels?.name}.`
+                  ? `Selection locked: ${booking.hostels?.name}. Lock in this room slot by submitting your payment receipt.`
+                  : `Booking successfully secured at ${booking.hostels?.name}.`
               }
-              actionText="View Selected Hostel"
+              actionText="Browse Available Hostels"
               actionHref={`/hostels`}
-              icon={<Building size={18} />}
+              icon={<Building size={16} />}
             />
 
             <StatusCard 
-              title="Financial Statement" 
-              statusText={booking.payment_status} 
-              badgeType={booking.payment_status === 'VERIFIED' ? 'success' : 'warning'} 
+              title="Financial Statement Status" 
+              statusText={
+                booking.payment_status === 'VERIFIED' ? 'Payment Verified' :
+                booking.payment_status === 'PENDING' ? 'Payment Pending Verification' : 'Payment Failed'
+              } 
+              badgeType={
+                booking.payment_status === 'VERIFIED' ? 'success' :
+                booking.payment_status === 'FAILED' ? 'danger' : 'warning'
+              } 
               explanation={
                 booking.payment_status === 'VERIFIED'
-                  ? 'Your transaction has been verified by finance accounts successfully.'
-                  : 'Your deposit receipt verification is pending bank verification review.'
+                  ? 'Your transaction has been verified by GCTU finance accounts successfully.'
+                  : 'Your deposit receipt verification is pending institutional bank validation.'
               }
-              actionText={booking.payment_status !== 'VERIFIED' ? 'Submit Deposit Receipt' : undefined}
+              actionText={booking.payment_status !== 'VERIFIED' ? 'Submit Payment for Verification' : undefined}
               actionHref="/student/payment"
-              icon={<CreditCard size={18} />}
+              icon={<CreditCard size={16} />}
             />
 
             <StatusCard 
-              title="Room Allocation" 
-              statusText={allocation ? 'Assigned' : 'Standby Queue'} 
+              title="Bed Allocation Status" 
+              statusText={
+                allocation ? 'Room Assigned' :
+                booking.payment_status === 'VERIFIED' ? 'Room Assignment Processing' : 'Allocation Queued'
+              } 
               badgeType={allocation ? 'success' : 'warning'} 
               explanation={
                 allocation 
-                  ? `Bed assigned! Building: ${allocation.rooms?.buildings?.name || 'Alpha'}, Room ${allocation.rooms?.room_number}.`
-                  : 'Waiting list: Your room allocation is pending payment approval verification.'
+                  ? `Bed Slot Assigned! Building: ${allocation.rooms?.buildings?.name || 'Alpha'}, Room ${allocation.rooms?.room_number}.`
+                  : 'Allocation Queued: Waiting list processing requires financial status verification.'
               }
               actionText={allocation ? 'Open Room Slip' : undefined}
               actionHref="/student/room"
-              icon={<User size={18} />}
+              icon={<User size={16} />}
             />
           </div>
 

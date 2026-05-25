@@ -101,72 +101,72 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* 1. Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 rounded-xl border border-slate-100 shadow-sm">
         <div>
-          <h1 className="text-2xl font-black text-slate-900">Admin Control Terminal</h1>
-          <p className="text-xs font-semibold text-slate-500 mt-1">Consolidated operational metrics and allocation engine controls.</p>
+          <h1 className="text-xl font-black text-slate-900">Admin Control Terminal</h1>
+          <p className="text-[11px] font-semibold text-slate-400 mt-0.5">Consolidated operational metrics and allocation engine controls.</p>
         </div>
-        <span className="bg-slate-900 text-white text-[10px] font-black uppercase tracking-wider px-4 py-2 rounded-xl flex items-center gap-1.5 align-middle self-start md:self-auto shadow-sm">
-          <ShieldCheck size={14} className="text-blue-500" /> Authorized Admin Session
+        <span className="bg-slate-900 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg flex items-center gap-1.5 align-middle self-start md:self-auto shadow-sm">
+          <ShieldCheck size={12} className="text-blue-500" /> Authorized Admin Session
         </span>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="skeleton h-24"></div>
-          <div className="skeleton h-24"></div>
-          <div className="skeleton h-24"></div>
-          <div className="skeleton h-24"></div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="skeleton h-20"></div>
+          <div className="skeleton h-20"></div>
+          <div className="skeleton h-20"></div>
+          <div className="skeleton h-20"></div>
         </div>
       ) : (
-        <div className="space-y-8 animate-fade-in">
+        <div className="space-y-4 animate-fade-in">
           {/* 2. Stats row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <AdminStatCard 
               title="Registered Students" 
               value={metrics.totalStudents} 
-              icon={<Users size={20} />} 
+              icon={<Users size={16} />} 
               colorClass="bg-blue-50 text-blue-600 border border-blue-100" 
             />
             <AdminStatCard 
               title="Active Hostels" 
               value={metrics.totalHostels} 
-              icon={<Building size={20} />} 
+              icon={<Building size={16} />} 
               colorClass="bg-teal-50 text-teal-600 border border-teal-100" 
             />
             <AdminStatCard 
-              title="Curfews & Occupancies" 
+              title="Bed Occupancy Roster" 
               value={`${metrics.occupiedBeds} / ${metrics.totalCapacity}`} 
               explanation="Beds Occupied" 
-              icon={<Activity size={20} />} 
+              icon={<Activity size={16} />} 
               colorClass="bg-emerald-50 text-emerald-600 border border-emerald-100" 
             />
             <AdminStatCard 
-              title="Pending Financial Slips" 
+              title="Unverified Payments Queue" 
               value={metrics.pendingPayments} 
-              icon={<CreditCard size={20} />} 
+              icon={<CreditCard size={16} />} 
               colorClass="bg-amber-50 text-amber-600 border border-amber-100" 
             />
           </div>
 
           {successMsg && (
-            <div className="bg-emerald-50 border border-emerald-100 p-3.5 rounded-xl text-xs font-bold text-emerald-800 flex items-center gap-2">
-              <ShieldCheck size={16} />
+            <div className="bg-emerald-50 border border-emerald-100 p-3 rounded-lg text-xs font-bold text-emerald-800 flex items-center gap-2">
+              <ShieldCheck size={14} />
               <span>{successMsg}</span>
             </div>
           )}
 
           {/* 3. Grid split */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
             {/* Left Box: Active allocation queue */}
-            <div className="lg:col-span-8 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
+            <div className="lg:col-span-8 bg-white p-5 rounded-xl border border-slate-100 shadow-sm space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
-                  <Play size={16} className="text-blue-600 animate-pulse" /> Pending Allocations Queue
+                <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                  <Play size={14} className="text-blue-600 animate-pulse" /> Allocation Backlog Queue
                 </h3>
-                <span className="text-[10px] font-bold text-slate-400">Next 5 students in standby</span>
+                <span className="text-[9px] font-bold text-slate-400">Next 5 students in standby</span>
               </div>
 
               <div className="dense-table-wrapper">
@@ -189,17 +189,17 @@ export default function AdminDashboardPage() {
                           <button
                             onClick={() => handleTriggerAutoAllocation(booking.id)}
                             disabled={triggerLoading}
-                            className="bg-blue-600 text-white font-bold text-[10px] px-3.5 py-1.5 rounded-lg hover:bg-blue-750 transition-colors flex items-center gap-1 shadow-sm uppercase tracking-wide"
+                            className="bg-blue-600 text-white font-bold text-[9px] px-3 py-1.5 rounded-lg hover:bg-blue-750 transition-colors flex items-center gap-1 shadow-sm uppercase tracking-wide"
                           >
-                            {triggerLoading ? <Loader2 size={10} className="animate-spin" /> : 'Auto Assign'}
+                            {triggerLoading ? <Loader2 size={10} className="animate-spin" /> : 'Trigger Allocation Process'}
                           </button>
                         </td>
                       </tr>
                     ))}
                     {pendingAllocations.length === 0 && (
                       <tr>
-                        <td colSpan={4} className="text-center py-8 text-slate-400 font-bold italic">
-                          No students currently waiting in queue.
+                        <td colSpan={4} className="text-center py-6 text-slate-400 font-bold italic">
+                          No students currently waiting in allocation queue.
                         </td>
                       </tr>
                     )}
@@ -209,26 +209,26 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* Right Box: Quick Shortcuts */}
-            <div className="lg:col-span-4 bg-slate-900 text-white p-6 rounded-2xl border border-slate-800 shadow-lg flex flex-col justify-between">
+            <div className="lg:col-span-4 bg-slate-900 text-white p-5 rounded-xl border border-slate-800 shadow-lg flex flex-col justify-between">
               <div>
-                <h3 className="text-sm font-black text-blue-500 uppercase tracking-widest mb-4">Command Shortcuts</h3>
-                <div className="space-y-3">
-                  <Link href="/admin/payments" className="flex justify-between items-center p-3.5 bg-slate-800 hover:bg-slate-750 border border-slate-700/50 rounded-xl transition-all">
-                    <span className="font-black text-xs">Verify Bank Slips</span>
-                    <ArrowRight size={14} className="text-blue-500" />
+                <h3 className="text-xs font-black text-blue-500 uppercase tracking-widest mb-3">Command Shortcuts</h3>
+                <div className="space-y-2">
+                  <Link href="/admin/payments" className="flex justify-between items-center p-3 bg-slate-800 hover:bg-slate-750 border border-slate-700/50 rounded-lg transition-all">
+                    <span className="font-black text-xs">Verify Payment Requests</span>
+                    <ArrowRight size={12} className="text-blue-500" />
                   </Link>
-                  <Link href="/admin/allocation" className="flex justify-between items-center p-3.5 bg-slate-800 hover:bg-slate-750 border border-slate-700/50 rounded-xl transition-all">
-                    <span className="font-black text-xs">Manual Room Assigner</span>
-                    <ArrowRight size={14} className="text-blue-500" />
+                  <Link href="/admin/allocation" className="flex justify-between items-center p-3 bg-slate-800 hover:bg-slate-750 border border-slate-700/50 rounded-lg transition-all">
+                    <span className="font-black text-xs">Reassign Room Allotments</span>
+                    <ArrowRight size={12} className="text-blue-500" />
                   </Link>
-                  <Link href="/admin/students" className="flex justify-between items-center p-3.5 bg-slate-800 hover:bg-slate-750 border border-slate-700/50 rounded-xl transition-all">
-                    <span className="font-black text-xs">Student Blocker Console</span>
-                    <ArrowRight size={14} className="text-blue-500" />
+                  <Link href="/admin/students" className="flex justify-between items-center p-3 bg-slate-800 hover:bg-slate-750 border border-slate-700/50 rounded-lg transition-all">
+                    <span className="font-black text-xs">Block Student Access Console</span>
+                    <ArrowRight size={12} className="text-blue-500" />
                   </Link>
                 </div>
               </div>
 
-              <div className="mt-8 bg-slate-800 p-4 rounded-xl border border-slate-700/50 text-[9px] text-slate-500 font-bold leading-normal">
+              <div className="mt-6 bg-slate-800 p-3 rounded-lg border border-slate-700/50 text-[9px] text-slate-500 font-bold leading-normal">
                 🔒 SECURITY REQUIREMENT: Every action taken by university coordinators is permanently logged in secure audit logs. Roster actions are irreversible.
               </div>
             </div>
