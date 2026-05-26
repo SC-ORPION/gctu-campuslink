@@ -1,10 +1,7 @@
 {
   "version": 1,
   "config": {
-    "env": {
-      "NEXT_PUBLIC_SUPABASE_URL": "https://jvtfuiggroqlpjdfjrlk.supabase.co",
-      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_8w78L1Gx8fFaCZ6T82SsmQ_7nIc9qxF"
-    },
+    "env": {},
     "webpack": null,
     "typescript": {
       "ignoreBuildErrors": false
