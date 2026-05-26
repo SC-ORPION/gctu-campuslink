@@ -140,6 +140,7 @@ model Room {
   allocations       Allocation[]
 
   @@map("rooms")
+  @@index([currentOccupancy])
 }
 
 model Booking {
@@ -158,6 +159,8 @@ model Booking {
   allocations     Allocation[]
 
   @@map("bookings")
+  @@index([status])
+  @@index([paymentStatus])
 }
 
 model Payment {
@@ -171,6 +174,7 @@ model Payment {
   createdAt  DateTime      @default(now()) @map("created_at")
 
   @@map("payments")
+  @@index([status])
 }
 
 model Allocation {
@@ -184,6 +188,7 @@ model Allocation {
   revokedAt         DateTime? @map("revoked_at")
 
   @@map("allocations")
+  @@index([revokedAt])
 }
 
 model BankSettings {

@@ -10,10 +10,15 @@ export function middleware(request: NextRequest) {
     pathname.startsWith('/api') ||
     pathname.includes('.') ||
     pathname === '/' ||
-    pathname === '/login' ||
-    pathname === '/register' ||
+    pathname.startsWith('/auth') ||
     pathname === '/blocked' ||
-    pathname.startsWith('/hostels')
+    pathname === '/about' ||
+    pathname === '/support' ||
+    pathname === '/hostel-guide' ||
+    pathname === '/rules' ||
+    pathname === '/faq' ||
+    pathname === '/terms' ||
+    pathname === '/privacy'
   ) {
     return NextResponse.next();
   }
@@ -30,7 +35,7 @@ export function middleware(request: NextRequest) {
 
   // 3. Gating logic for unauthenticated users
   if (!isAuthenticated) {
-    const loginUrl = new URL('/login', request.url);
+    const loginUrl = new URL('/auth/login', request.url);
     return NextResponse.redirect(loginUrl);
   }
 

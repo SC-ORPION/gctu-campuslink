@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { 
-  Building, CreditCard, LogOut, ShieldAlert,
-  ArrowRight, Calendar, User, Info, MapPin, LayoutGrid 
+  Building, CreditCard, ShieldAlert,
+  ArrowRight, User, LayoutGrid, MapPin
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { supabase } from '../../../lib/supabase';
@@ -28,7 +29,6 @@ export default function StudentDashboardPage() {
   const fetchBookingDetails = async () => {
     if (!user) return;
     try {
-      // 1. Fetch active booking
       const { data: bookingsData, error: bookingErr } = await supabase
         .from('bookings')
         .select('*, hostels(name, campus, location_name)')
@@ -42,7 +42,6 @@ export default function StudentDashboardPage() {
         const activeBooking = bookingsData[0];
         setBooking(activeBooking);
 
-        // 2. Fetch allocation details if assigned
         if (activeBooking.status === 'ALLOCATED') {
           const { data: allocData, error: allocErr } = await supabase
             .from('allocations')
@@ -63,17 +62,17 @@ export default function StudentDashboardPage() {
     }
   };
 
-  // Blocked Student Redirect Gate handled inside layout/middleware, double-asserted here
+  // Blocked guard
   if (user?.status === 'BLOCKED') {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
-        <div className="max-w-md w-full bg-white border border-red-200 rounded-2xl p-8 text-center shadow-md">
-          <div className="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
-            <ShieldAlert size={36} />
+      <div className="min-h-[60vh] flex items-center justify-center p-6">
+        <div className="max-w-md w-full bg-white border border-rose-200 rounded-2xl p-8 text-center shadow-sm">
+          <div className="w-16 h-16 bg-rose-50 border border-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <ShieldAlert size={32} />
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 mb-2">Account Permanently Blocked</h1>
-          <p className="text-slate-500 mb-6 leading-relaxed text-sm font-medium">
-            Your profile access has been restricted by GCTU Hostel Administration. You are barred from using booking operations.
+          <h1 className="text-xl font-bold text-slate-900 mb-2">Account Restricted</h1>
+          <p className="text-sm text-slate-500 mb-6 leading-relaxed font-normal">
+            Your profile access has been restricted by the GCTU Hostel Administration. Please contact academic coordinators.
           </p>
         </div>
       </div>
@@ -82,127 +81,164 @@ export default function StudentDashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* 1. Header Banner */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <span className="text-[9px] font-extrabold uppercase tracking-widest text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">
-            Active Student Cockpit
-          </span>
-          <h1 className="text-2xl font-extrabold text-slate-900 mt-2">Welcome Back, {user?.full_name}</h1>
-          <p className="text-xs font-semibold text-slate-500">Manage your institutional accommodation request details here.</p>
+      {/* Welcome Banner */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="relative bg-white border-l-8 border-l-blue-700 border-y border-r border-slate-200/80 rounded-2xl p-6 overflow-hidden shadow-md"
+      >
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-[80px] pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full">
+              Active Student Portal
+            </span>
+            <h1 className="text-2xl font-bold text-slate-900 mt-3">Welcome Back, {user?.full_name}</h1>
+            <p className="text-sm text-slate-500 font-normal mt-1">
+              Manage your GCTU accommodation details and bookings.
+            </p>
+          </div>
+          <div className="bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 flex items-center gap-2 self-start sm:self-auto">
+            <LayoutGrid size={14} className="text-slate-400" />
+            <span>Student ID: {user?.student_id || 'N/A'}</span>
+          </div>
         </div>
-        <div className="bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-100 text-xs font-bold text-slate-600 flex items-center gap-1.5 align-middle self-start sm:self-auto">
-          <LayoutGrid size={14} className="text-slate-400" />
-          <span>ID: {user?.student_id || 'N/A'}</span>
-        </div>
-      </div>
+      </motion.div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="skeleton h-36"></div>
-          <div className="skeleton h-36"></div>
-          <div className="skeleton h-36"></div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="skeleton-line h-32 rounded-2xl bg-slate-100 animate-pulse" />
+          <div className="skeleton-line h-32 rounded-2xl bg-slate-100 animate-pulse" />
+          <div className="skeleton-line h-32 rounded-2xl bg-slate-100 animate-pulse" />
         </div>
       ) : !booking ? (
-        /* Empty booking state */
         <EmptyState 
           title="No Active Accommodation Booking" 
           description="You haven't reserved or applied for any GCTU hostel accommodation for the upcoming academic semester." 
           actionText="Browse Available Hostels" 
-          actionHref="/hostels"
+          actionHref="/student/hostels"
         />
       ) : (
-        <div className="space-y-4">
-          {/* 2. Pipeline tracker */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="space-y-6"
+        >
+          {/* Progress Tracker */}
           <BookingProgress currentStatus={booking.status} />
 
-          {/* 3. Operational Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <StatusCard 
-              title="Hostel Allocation Request" 
-              statusText={
-                booking.status === 'PENDING_PAYMENT' ? 'Hostel Locked (Selection Finalized)' :
-                booking.status === 'PENDING_VERIFICATION' ? 'Payment Pending Verification' :
-                booking.status === 'CONFIRMED' ? 'Allocation Queued' :
-                booking.status === 'ALLOCATED' ? 'Allocation Confirmed' : 'Booking Revoked'
-              } 
-              badgeType={
-                booking.status === 'ALLOCATED' ? 'success' :
-                booking.status === 'CANCELLED' ? 'danger' : 'warning'
-              } 
-              explanation={
-                booking.status === 'PENDING_PAYMENT' 
-                  ? `Selection locked: ${booking.hostels?.name}. Lock in this room slot by submitting your payment receipt.`
-                  : `Booking successfully secured at ${booking.hostels?.name}.`
-              }
-              actionText="Browse Available Hostels"
-              actionHref={`/hostels`}
-              icon={<Building size={16} />}
-            />
+          {/* Status Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-white border-t-4 border-t-blue-700 border-x border-b border-slate-200 rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-lg">
+              <StatusCard 
+                title="Hostel Allocation Request" 
+                statusText={
+                  booking.status === 'PENDING_PAYMENT' ? 'Hostel Locked' :
+                  booking.status === 'PENDING_VERIFICATION' ? 'Payment Pending' :
+                  booking.status === 'CONFIRMED' ? 'Allocation Queued' :
+                  booking.status === 'ALLOCATED' ? 'Confirmed' : 'Revoked'
+                } 
+                badgeType={
+                  booking.status === 'ALLOCATED' ? 'success' :
+                  booking.status === 'CANCELLED' ? 'danger' : 'warning'
+                } 
+                explanation={
+                  booking.status === 'PENDING_PAYMENT' 
+                    ? `Selection locked: ${booking.hostels?.name}. Submit payment to secure your slot.`
+                    : `Booking secured at ${booking.hostels?.name}.`
+                }
+                actionText="Browse Hostels"
+                actionHref="/student/hostels"
+                icon={<Building size={16} />}
+              />
+            </div>
 
-            <StatusCard 
-              title="Financial Statement Status" 
-              statusText={
-                booking.payment_status === 'VERIFIED' ? 'Payment Verified' :
-                booking.payment_status === 'PENDING' ? 'Payment Pending Verification' : 'Payment Failed'
-              } 
-              badgeType={
-                booking.payment_status === 'VERIFIED' ? 'success' :
-                booking.payment_status === 'FAILED' ? 'danger' : 'warning'
-              } 
-              explanation={
-                booking.payment_status === 'VERIFIED'
-                  ? 'Your transaction has been verified by GCTU finance accounts successfully.'
-                  : 'Your deposit receipt verification is pending institutional bank validation.'
-              }
-              actionText={booking.payment_status !== 'VERIFIED' ? 'Submit Payment for Verification' : undefined}
-              actionHref="/student/payment"
-              icon={<CreditCard size={16} />}
-            />
+            <div className="bg-white border-t-4 border-t-blue-700 border-x border-b border-slate-200 rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-lg">
+              <StatusCard 
+                title="Financial Status" 
+                statusText={
+                  booking.payment_status === 'VERIFIED' ? 'Verified' :
+                  booking.payment_status === 'PENDING' ? 'Pending Verification' : 'Failed'
+                } 
+                badgeType={
+                  booking.payment_status === 'VERIFIED' ? 'success' :
+                  booking.payment_status === 'FAILED' ? 'danger' : 'warning'
+                } 
+                explanation={
+                  booking.payment_status === 'VERIFIED'
+                    ? 'Transaction verified by GCTU finance.'
+                    : 'Receipt verification pending bank validation.'
+                }
+                actionText={booking.payment_status !== 'VERIFIED' ? 'Submit Payment' : undefined}
+                actionHref="/student/payment"
+                icon={<CreditCard size={16} />}
+              />
+            </div>
 
-            <StatusCard 
-              title="Bed Allocation Status" 
-              statusText={
-                allocation ? 'Room Assigned' :
-                booking.payment_status === 'VERIFIED' ? 'Room Assignment Processing' : 'Allocation Queued'
-              } 
-              badgeType={allocation ? 'success' : 'warning'} 
-              explanation={
-                allocation 
-                  ? `Bed Slot Assigned! Building: ${allocation.rooms?.buildings?.name || 'Alpha'}, Room ${allocation.rooms?.room_number}.`
-                  : 'Allocation Queued: Waiting list processing requires financial status verification.'
-              }
-              actionText={allocation ? 'Open Room Slip' : undefined}
-              actionHref="/student/room"
-              icon={<User size={16} />}
-            />
+            <div className="bg-white border-t-4 border-t-blue-700 border-x border-b border-slate-200 rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-lg">
+              <StatusCard 
+                title="Bed Allocation" 
+                statusText={
+                  allocation ? 'Room Assigned' :
+                  booking.payment_status === 'VERIFIED' ? 'Processing' : 'Queued'
+                } 
+                badgeType={allocation ? 'success' : 'warning'} 
+                explanation={
+                  allocation 
+                    ? `Building: ${allocation.rooms?.buildings?.name || 'Alpha'}, Room ${allocation.rooms?.room_number}.`
+                    : 'Waiting for financial verification to proceed.'
+                }
+                actionText={allocation ? 'Open Room Slip' : undefined}
+                actionHref="/student/allocation"
+                icon={<User size={16} />}
+              />
+            </div>
           </div>
 
-          {/* 4. Room Info Card */}
+          {/* Room Slip */}
           {allocation && (
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-              <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest">Room Slip Summary</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase">Assigned Building</div>
-                  <div className="text-base font-black text-slate-800 mt-1">{allocation.rooms?.buildings?.name}</div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="bg-white border-2 border-blue-600/30 rounded-2xl p-6 shadow-md"
+            >
+              <h3 className="text-sm font-bold text-blue-800 uppercase tracking-wider mb-4 border-b border-blue-50 pb-2">
+                Room Slip Summary
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="bg-blue-50/45 p-4 rounded-xl border border-blue-100">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Building size={14} className="text-blue-700" />
+                    <span className="text-[10px] font-bold text-blue-800 uppercase tracking-wider">Building</span>
+                  </div>
+                  <div className="text-base font-bold text-slate-900">{allocation.rooms?.buildings?.name}</div>
                 </div>
 
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase">Room Number</div>
-                  <div className="text-base font-black text-slate-800 mt-1">Room {allocation.rooms?.room_number}</div>
+                <div className="bg-blue-50/45 p-4 rounded-xl border border-blue-100">
+                  <div className="flex items-center gap-2 mb-2">
+                    <MapPin size={14} className="text-amber-600" />
+                    <span className="text-[10px] font-bold text-blue-800 uppercase tracking-wider">Room</span>
+                  </div>
+                  <div className="text-base font-bold text-slate-900">Room {allocation.rooms?.room_number}</div>
                 </div>
 
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase">Gender Policy</div>
-                  <div className="text-base font-black text-slate-800 mt-1 uppercase">
+                <div className="bg-blue-50/45 p-4 rounded-xl border border-blue-100">
+                  <div className="flex items-center gap-2 mb-2">
+                    <User size={14} className="text-emerald-700" />
+                    <span className="text-[10px] font-bold text-blue-800 uppercase tracking-wider">Gender Policy</span>
+                  </div>
+                  <div className="text-base font-bold text-slate-900 uppercase">
                     {allocation.rooms?.gender_rule?.replace('_ONLY', 's Only')}
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
       )}
     </div>
   );

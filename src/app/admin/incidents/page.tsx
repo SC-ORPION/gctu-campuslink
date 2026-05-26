@@ -69,93 +69,97 @@ export default function AdminIncidentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12">
-      <div className="container max-w-6xl">
-        <button onClick={() => router.push('/admin/dashboard')} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors font-bold text-sm mb-6">
-          <ChevronLeft size={20} /> Back to Dashboard
-        </button>
+    <div className="space-y-6 text-left">
+      <button 
+        onClick={() => router.push('/admin/dashboard')} 
+        className="flex items-center gap-2 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 transition-colors font-bold text-sm"
+      >
+        <ChevronLeft size={16} /> Back to Dashboard
+      </button>
 
-        <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-black text-slate-900">Incident Logs</h1>
-              <p className="text-slate-500 text-sm font-semibold">Track student maintenance tickets, plumbing reports, and Wi-Fi outages.</p>
-            </div>
-            <button onClick={fetchIncidents} className="p-2 bg-slate-50 hover:bg-slate-100 rounded-xl text-slate-500 transition-colors border border-slate-150">
-              <RefreshCw size={16} />
-            </button>
+      <div className="bg-white dark:bg-zinc-950 p-8 rounded-[2rem] border border-[#1e5faf]/15 dark:border-zinc-900 shadow-[0_4px_24px_rgba(0,0,0,0.3)] space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-xl font-black text-slate-900 dark:text-zinc-50">Incident Logs</h1>
+            <p className="text-slate-555 dark:text-zinc-400 text-xs font-semibold mt-1">Track student maintenance tickets, plumbing reports, and Wi-Fi outages.</p>
           </div>
-
-          {incidents.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs font-semibold">
-                <thead>
-                  <tr className="border-b border-slate-100 text-slate-400">
-                    <th className="pb-4 uppercase">Student Details</th>
-                    <th className="pb-4 uppercase">Room Location</th>
-                    <th className="pb-4 uppercase">Category</th>
-                    <th className="pb-4 uppercase">Issue Details</th>
-                    <th className="pb-4 uppercase">Date Filed</th>
-                    <th className="pb-4 text-center uppercase">Resolution</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-50 text-slate-700">
-                  {incidents.map((incident) => (
-                    <tr key={incident.id} className="hover:bg-slate-50/50">
-                      <td className="py-4">
-                        <div className="font-black text-slate-900">{incident.users?.full_name}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">{incident.users?.student_id}</div>
-                      </td>
-                      <td className="py-4">
-                        <div className="font-bold text-slate-800">Room {incident.rooms?.room_number}</div>
-                        <div className="text-[10px] font-black text-primary uppercase mt-0.5">
-                          {incident.rooms?.buildings?.hostels?.name}
-                        </div>
-                      </td>
-                      <td className="py-4">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${
-                          incident.type === 'WIFI' ? 'bg-purple-50 text-purple-600' :
-                          incident.type === 'ELECTRICAL' ? 'bg-blue-50 text-blue-600' :
-                          incident.type === 'PLUMBING' ? 'bg-teal-50 text-teal-600' :
-                          'bg-amber-50 text-amber-600'
-                        }`}>
-                          {incident.type}
-                        </span>
-                      </td>
-                      <td className="py-4 max-w-xs">
-                        <p className="text-slate-600 font-medium break-words leading-relaxed">{incident.description}</p>
-                      </td>
-                      <td className="py-4 text-slate-500">
-                        {new Date(incident.created_at).toLocaleString()}
-                      </td>
-                      <td className="py-4 text-center">
-                        <select 
-                          disabled={updatingId === incident.id}
-                          value={incident.status}
-                          onChange={(e) => handleUpdateStatus(incident.id, e.target.value)}
-                          className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider focus:outline-none ${
-                            incident.status === 'RESOLVED' ? 'bg-emerald-50 text-emerald-600' :
-                            incident.status === 'IN_PROGRESS' ? 'bg-blue-50 text-blue-600' :
-                            'bg-amber-50 text-amber-600'
-                          }`}
-                        >
-                          <option value="REPORTED">REPORTED</option>
-                          <option value="IN_PROGRESS">IN PROGRESS</option>
-                          <option value="RESOLVED">RESOLVED</option>
-                        </select>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-12 text-slate-400">
-              <Check size={32} className="mb-2 text-emerald-500" />
-              <div className="text-xs font-semibold">No active maintenance incidents reported. All systems optimal.</div>
-            </div>
-          )}
+          <button 
+            onClick={fetchIncidents} 
+            className="p-2 bg-[#06182e]/40 hover:bg-[#0f3058]/30 dark:bg-zinc-900 dark:hover:bg-zinc-800 rounded-xl text-slate-500 dark:text-zinc-400 transition-colors border border-[#1e5faf]/15 dark:border-zinc-800"
+          >
+            <RefreshCw size={14} />
+          </button>
         </div>
+
+        {incidents.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs font-semibold text-slate-650 dark:text-zinc-400">
+              <thead>
+                <tr className="border-b border-[#1e5faf]/15 dark:border-zinc-900 text-slate-400 dark:text-zinc-500 font-bold uppercase tracking-wider">
+                  <th className="pb-4">Student Details</th>
+                  <th className="pb-4">Room Location</th>
+                  <th className="pb-4">Category</th>
+                  <th className="pb-4">Issue Details</th>
+                  <th className="pb-4">Date Filed</th>
+                  <th className="pb-4 text-center">Resolution</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-50 dark:divide-zinc-900/50">
+                {incidents.map((incident) => (
+                  <tr key={incident.id} className="hover:bg-[#06182e]/40/50 dark:hover:bg-zinc-900/30 transition-colors">
+                    <td className="py-4">
+                      <div className="font-black text-slate-900 dark:text-zinc-200">{incident.users?.fullName || incident.users?.full_name}</div>
+                      <div className="text-[10px] text-slate-400 dark:text-zinc-500 mt-0.5">{incident.users?.studentId || incident.users?.student_id}</div>
+                    </td>
+                    <td className="py-4">
+                      <div className="font-bold text-white dark:text-zinc-300">Room {incident.rooms?.roomNumber || incident.rooms?.room_number}</div>
+                      <div className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase mt-0.5">
+                        {incident.rooms?.buildings?.hostels?.name}
+                      </div>
+                    </td>
+                    <td className="py-4">
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${
+                        incident.type === 'WIFI' ? 'bg-purple-50 dark:bg-purple-950/20 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-900/30' :
+                        incident.type === 'ELECTRICAL' ? 'bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900/30' :
+                        incident.type === 'PLUMBING' ? 'bg-teal-50 dark:bg-teal-950/20 text-teal-600 dark:text-teal-400 border-teal-200 dark:border-teal-900/30' :
+                        'bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-900/30'
+                      }`}>
+                        {incident.type}
+                      </span>
+                    </td>
+                    <td className="py-4 max-w-xs">
+                      <p className="text-slate-300 dark:text-zinc-300 font-medium break-words leading-relaxed">{incident.description}</p>
+                    </td>
+                    <td className="py-4 text-slate-500 dark:text-zinc-500 font-normal">
+                      {new Date(incident.created_at).toLocaleString()}
+                    </td>
+                    <td className="py-4 text-center">
+                      <select 
+                        disabled={updatingId === incident.id}
+                        value={incident.status}
+                        onChange={(e) => handleUpdateStatus(incident.id, e.target.value)}
+                        className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider focus:outline-none border ${
+                          incident.status === 'RESOLVED' ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-450 border-emerald-250 dark:border-emerald-900/30' :
+                          incident.status === 'IN_PROGRESS' ? 'bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 border-blue-250 dark:border-blue-900/30' :
+                          'bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-450 border-amber-250 dark:border-amber-900/30'
+                        }`}
+                      >
+                        <option value="REPORTED">REPORTED</option>
+                        <option value="IN_PROGRESS">IN PROGRESS</option>
+                        <option value="RESOLVED">RESOLVED</option>
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-12 text-slate-400 dark:text-zinc-550 border border-dashed border-[#1e5faf]/15 dark:border-zinc-900 rounded-2xl">
+            <Check size={32} className="mb-2 text-emerald-500" />
+            <div className="text-xs font-semibold">No active maintenance incidents reported. All systems optimal.</div>
+          </div>
+        )}
       </div>
     </div>
   );

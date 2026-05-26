@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AllocationService } from '@/lib/services/allocation.service';
+import { JobQueue } from '@/lib/queue/job-queue';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,7 +14,19 @@ export async function POST(request: NextRequest) {
 
     if (action === 'auto') {
       if (!bookingId) return NextResponse.json({ error: 'Missing bookingId.' }, { status: 400 });
-      result = await AllocationService.triggerAutoAllocation(bookingId);
+      // Queue immediately and return responsiveness
+      const job = JobQueue.enqueue('ALLOCATION_ENGINE_JOB', { bookingId }, { priority: 'high' });
+      result = { queued: true, jobId: job.id };
+    } else if (action === 'bulk_allocation') {
+      // Bulk run queued
+      const job = JobQueue.enqueue('ALLOCATION_ENGINE_JOB', {}, { priority: 'medium' });
+      result = { queued: true, jobId: job.id, type: 'bulk_allocation' };
+    } else if (action === 'bulk_payment_sync') {
+      const job = JobQueue.enqueue('PAYMENT_VERIFICATION_JOB', {}, { priority: 'low' });
+      result = { queued: true, jobId: job.id, type: 'bulk_payment_sync' };
+    } else if (action === 'bulk_revocation_recovery') {
+      const job = JobQueue.enqueue('ALLOCATION_ENGINE_JOB', { recovery: true }, { priority: 'medium' });
+      result = { queued: true, jobId: job.id, type: 'bulk_revocation_recovery' };
     } else if (action === 'manual') {
       if (!bookingId || !roomId || !adminId) {
         return NextResponse.json({ error: 'Missing parameters for manual allocation.' }, { status: 400 });

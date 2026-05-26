@@ -1,71 +1,71 @@
 'use client';
 
 import React from 'react';
-import { Check } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { CheckCircle2, Circle, Clock } from 'lucide-react';
 
-interface BookingProgressProps {
-  currentStatus: 'PENDING_PAYMENT' | 'PENDING_VERIFICATION' | 'CONFIRMED' | 'ALLOCATED' | 'CANCELLED';
-}
+const STEPS = [
+  { key: 'PENDING_PAYMENT', label: 'Hostel Selected' },
+  { key: 'PENDING_VERIFICATION', label: 'Payment Submitted' },
+  { key: 'CONFIRMED', label: 'Payment Verified' },
+  { key: 'ALLOCATED', label: 'Room Allocated' },
+];
 
-export default function BookingProgress({ currentStatus }: BookingProgressProps) {
-  const steps = [
-    { key: 'PENDING_PAYMENT', label: '1. Registered' },
-    { key: 'PENDING_VERIFICATION', label: '2. Paid' },
-    { key: 'CONFIRMED', label: '3. Verified' },
-    { key: 'ALLOCATED', label: '4. Assigned' },
-  ];
+const statusOrder = ['PENDING_PAYMENT', 'PENDING_VERIFICATION', 'CONFIRMED', 'ALLOCATED'];
 
-  const getStepIndex = () => {
-    if (currentStatus === 'CANCELLED') return -1;
-    if (currentStatus === 'PENDING_PAYMENT') return 0;
-    if (currentStatus === 'PENDING_VERIFICATION') return 1;
-    if (currentStatus === 'CONFIRMED') return 2;
-    if (currentStatus === 'ALLOCATED') return 3;
-    return 0;
-  };
-
-  const activeIndex = getStepIndex();
+export default function BookingProgress({ currentStatus }: { currentStatus: string }) {
+  const currentIndex = statusOrder.indexOf(currentStatus);
 
   return (
-    <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
-      <div className="flex justify-between items-center mb-6">
-        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Accommodation Pipeline</span>
-        <span className="text-xs font-black text-slate-800">
-          {currentStatus === 'CANCELLED' ? 'Cancelled' : `Stage ${activeIndex + 1} of 4`}
-        </span>
-      </div>
+    <div className="bg-[#0a2240]/60 backdrop-blur-sm border border-[#1e5faf]/15 rounded-2xl p-6">
+      <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.12em] mb-5">
+        Booking Progress
+      </h3>
 
-      <div className="relative flex items-center justify-between">
-        {/* Connection line */}
-        <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1 bg-slate-100 z-0"></div>
-        <div 
-          className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-blue-600 transition-all duration-500 z-0"
-          style={{ width: `${activeIndex >= 0 ? (activeIndex / (steps.length - 1)) * 100 : 0}%` }}
-        ></div>
+      <div className="flex items-center justify-between relative">
+        {/* Connecting Line */}
+        <div className="absolute top-4 left-8 right-8 h-px bg-[#0f3058]">
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: currentIndex >= 0 ? (currentIndex + 1) / STEPS.length : 0 }}
+            transition={{ duration: 1, ease: 'easeInOut' }}
+            className="h-full bg-gradient-to-r from-[#d4af37] to-[#10b981] origin-left"
+          />
+        </div>
 
-        {steps.map((step, index) => {
-          const isDone = index < activeIndex;
-          const isActive = index === activeIndex;
+        {STEPS.map((step, i) => {
+          const isCompleted = i <= currentIndex;
+          const isCurrent = i === currentIndex;
 
           return (
-            <div key={step.key} className="relative z-10 flex flex-col items-center">
-              <div 
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
-                  isDone 
-                    ? 'bg-blue-600 text-white' 
-                    : isActive 
-                      ? 'bg-white border-2 border-blue-600 text-blue-600 shadow-sm' 
-                      : 'bg-white border border-slate-200 text-slate-400'
+            <div key={step.key} className="flex flex-col items-center relative z-10 flex-1">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+                className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 transition-all duration-300 ${
+                  isCompleted
+                    ? isCurrent
+                      ? 'bg-[#d4af37] shadow-[0_0_15px_rgba(212,175,55,0.3)]'
+                      : 'bg-[#10b981] shadow-[0_0_10px_rgba(16,185,129,0.2)]'
+                    : 'bg-[#0f3058] border border-[#1e5faf]/20'
                 }`}
               >
-                {isDone ? <Check size={14} /> : index + 1}
-              </div>
-              <span 
-                className={`text-[10px] font-extrabold uppercase mt-2 tracking-wide ${
-                  isActive ? 'text-blue-600' : 'text-slate-400'
-                }`}
-              >
-                {step.label.split('. ')[1]}
+                {isCompleted ? (
+                  isCurrent ? (
+                    <Clock size={14} className="text-[#06182e]" />
+                  ) : (
+                    <CheckCircle2 size={14} className="text-white" />
+                  )
+                ) : (
+                  <Circle size={14} className="text-slate-600" />
+                )}
+              </motion.div>
+
+              <span className={`text-[10px] font-bold text-center leading-tight ${
+                isCompleted ? 'text-white' : 'text-slate-500'
+              }`}>
+                {step.label}
               </span>
             </div>
           );

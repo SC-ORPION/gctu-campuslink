@@ -23,20 +23,20 @@
   },
   "dynamicRoutes": [
     {
-      "page": "/booking/[hostelId]",
-      "regex": "^/booking/([^/]+?)(?:/)?$",
+      "page": "/student/booking/[hostelId]",
+      "regex": "^/student/booking/([^/]+?)(?:/)?$",
       "routeKeys": {
         "nxtPhostelId": "nxtPhostelId"
       },
-      "namedRegex": "^/booking/(?<nxtPhostelId>[^/]+?)(?:/)?$"
+      "namedRegex": "^/student/booking/(?<nxtPhostelId>[^/]+?)(?:/)?$"
     },
     {
-      "page": "/hostels/[id]",
-      "regex": "^/hostels/([^/]+?)(?:/)?$",
+      "page": "/student/hostels/[id]",
+      "regex": "^/student/hostels/([^/]+?)(?:/)?$",
       "routeKeys": {
         "nxtPid": "nxtPid"
       },
-      "namedRegex": "^/hostels/(?<nxtPid>[^/]+?)(?:/)?$"
+      "namedRegex": "^/student/hostels/(?<nxtPid>[^/]+?)(?:/)?$"
     }
   ],
   "staticRoutes": [
@@ -59,16 +59,28 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
-      "page": "/admin/allocation",
-      "regex": "^/admin/allocation(?:/)?$",
+      "page": "/about",
+      "regex": "^/about(?:/)?$",
       "routeKeys": {},
-      "namedRegex": "^/admin/allocation(?:/)?$"
+      "namedRegex": "^/about(?:/)?$"
+    },
+    {
+      "page": "/admin/allocations",
+      "regex": "^/admin/allocations(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/allocations(?:/)?$"
     },
     {
       "page": "/admin/dashboard",
       "regex": "^/admin/dashboard(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/admin/dashboard(?:/)?$"
+    },
+    {
+      "page": "/admin/hostels",
+      "regex": "^/admin/hostels(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/hostels(?:/)?$"
     },
     {
       "page": "/admin/incidents",
@@ -83,10 +95,28 @@
       "namedRegex": "^/admin/payments(?:/)?$"
     },
     {
+      "page": "/admin/settings",
+      "regex": "^/admin/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings(?:/)?$"
+    },
+    {
       "page": "/admin/students",
       "regex": "^/admin/students(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/admin/students(?:/)?$"
+    },
+    {
+      "page": "/admin/system",
+      "regex": "^/admin/system(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/system(?:/)?$"
+    },
+    {
+      "page": "/admin/system/ui-showcase",
+      "regex": "^/admin/system/ui\\-showcase(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/system/ui\\-showcase(?:/)?$"
     },
     {
       "page": "/api/admin/allocation",
@@ -119,34 +149,76 @@
       "namedRegex": "^/api/student/payment(?:/)?$"
     },
     {
+      "page": "/auth/forgot-password",
+      "regex": "^/auth/forgot\\-password(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/forgot\\-password(?:/)?$"
+    },
+    {
+      "page": "/auth/login",
+      "regex": "^/auth/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/login(?:/)?$"
+    },
+    {
+      "page": "/auth/register",
+      "regex": "^/auth/register(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/register(?:/)?$"
+    },
+    {
       "page": "/blocked",
       "regex": "^/blocked(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/blocked(?:/)?$"
     },
     {
-      "page": "/hostels",
-      "regex": "^/hostels(?:/)?$",
+      "page": "/faq",
+      "regex": "^/faq(?:/)?$",
       "routeKeys": {},
-      "namedRegex": "^/hostels(?:/)?$"
+      "namedRegex": "^/faq(?:/)?$"
     },
     {
-      "page": "/login",
-      "regex": "^/login(?:/)?$",
+      "page": "/hostel-guide",
+      "regex": "^/hostel\\-guide(?:/)?$",
       "routeKeys": {},
-      "namedRegex": "^/login(?:/)?$"
+      "namedRegex": "^/hostel\\-guide(?:/)?$"
     },
     {
-      "page": "/register",
-      "regex": "^/register(?:/)?$",
+      "page": "/privacy",
+      "regex": "^/privacy(?:/)?$",
       "routeKeys": {},
-      "namedRegex": "^/register(?:/)?$"
+      "namedRegex": "^/privacy(?:/)?$"
+    },
+    {
+      "page": "/rules",
+      "regex": "^/rules(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/rules(?:/)?$"
+    },
+    {
+      "page": "/student/allocation",
+      "regex": "^/student/allocation(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/student/allocation(?:/)?$"
     },
     {
       "page": "/student/dashboard",
       "regex": "^/student/dashboard(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/student/dashboard(?:/)?$"
+    },
+    {
+      "page": "/student/hostels",
+      "regex": "^/student/hostels(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/student/hostels(?:/)?$"
+    },
+    {
+      "page": "/student/notifications",
+      "regex": "^/student/notifications(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/student/notifications(?:/)?$"
     },
     {
       "page": "/student/payment",
@@ -161,10 +233,22 @@
       "namedRegex": "^/student/profile(?:/)?$"
     },
     {
-      "page": "/student/room",
-      "regex": "^/student/room(?:/)?$",
+      "page": "/student/settings",
+      "regex": "^/student/settings(?:/)?$",
       "routeKeys": {},
-      "namedRegex": "^/student/room(?:/)?$"
+      "namedRegex": "^/student/settings(?:/)?$"
+    },
+    {
+      "page": "/support",
+      "regex": "^/support(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/support(?:/)?$"
+    },
+    {
+      "page": "/terms",
+      "regex": "^/terms(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/terms(?:/)?$"
     }
   ],
   "dataRoutes": [],

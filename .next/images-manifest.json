@@ -23,10 +23,7 @@
     "path": "/_next/image",
     "loader": "default",
     "loaderFile": "",
-    "domains": [
-      "placeholder.supabase.co",
-      "via.placeholder.com"
-    ],
+    "domains": [],
     "disableStaticImages": false,
     "minimumCacheTTL": 14400,
     "formats": [
@@ -44,7 +41,18 @@
         "search": ""
       }
     ],
-    "remotePatterns": [],
+    "remotePatterns": [
+      {
+        "protocol": "https",
+        "hostname": "^(?:(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)\\.supabase\\.co\\/?)$",
+        "pathname": "^(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)\\/?)$"
+      },
+      {
+        "protocol": "https",
+        "hostname": "^(?:^(?:via\\.placeholder\\.com)$)$",
+        "pathname": "^(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)\\/?)$"
+      }
+    ],
     "qualities": [
       75
     ],

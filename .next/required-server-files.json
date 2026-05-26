@@ -1,7 +1,10 @@
 {
   "version": 1,
   "config": {
-    "env": {},
+    "env": {
+      "NEXT_PUBLIC_SUPABASE_URL": "https://jvtfuiggroqlpjdfjrlk.supabase.co",
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_8w78L1Gx8fFaCZ6T82SsmQ_7nIc9qxF"
+    },
     "webpack": null,
     "typescript": {
       "ignoreBuildErrors": false
@@ -45,10 +48,7 @@
       "path": "/_next/image",
       "loader": "default",
       "loaderFile": "",
-      "domains": [
-        "placeholder.supabase.co",
-        "via.placeholder.com"
-      ],
+      "domains": [],
       "disableStaticImages": false,
       "minimumCacheTTL": 14400,
       "formats": [
@@ -66,7 +66,16 @@
           "search": ""
         }
       ],
-      "remotePatterns": [],
+      "remotePatterns": [
+        {
+          "protocol": "https",
+          "hostname": "**.supabase.co"
+        },
+        {
+          "protocol": "https",
+          "hostname": "via.placeholder.com"
+        }
+      ],
       "qualities": [
         75
       ],
@@ -107,7 +116,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "C:\\Users\\abrah",
+    "outputFileTracingRoot": "C:\\Users\\abrah\\OneDrive\\Documents\\gctu hostels",
     "cacheComponents": false,
     "cacheLife": {
       "default": {
@@ -307,12 +316,12 @@
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.js",
     "turbopack": {
-      "root": "C:\\Users\\abrah"
+      "root": "C:\\Users\\abrah\\OneDrive\\Documents\\gctu hostels"
     },
     "distDirRoot": ".next"
   },
   "appDir": "C:\\Users\\abrah\\OneDrive\\Documents\\gctu hostels",
-  "relativeAppDir": "OneDrive\\Documents\\gctu hostels",
+  "relativeAppDir": "",
   "files": [
     ".next\\routes-manifest.json",
     ".next\\server\\pages-manifest.json",

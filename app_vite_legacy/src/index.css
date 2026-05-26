@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --navy-950: #06182e;
+    --navy-900: #0a2240;
+    --navy-800: #0f3058;
+    --blue-600: #1e5faf;
+    --blue-500: #2a75d1;
+    --blue-400: #4a9eff;
+    --amber-500: #d4a017;
+    --amber-400: #e8b93a;
+    --emerald-500: #10b981;
+    --rose-500: #f43f5e;
+    --slate-200: #e2e8f0;
+    --slate-400: #94a3b8;
+
+    --background: 210 78% 10%;
+    --foreground: 214 32% 91%;
+    --card: 210 75% 14%;
+    --card-foreground: 214 32% 91%;
+    --popover: 210 75% 14%;
+    --popover-foreground: 214 32% 91%;
+    --primary: 42 79% 46%;
+    --primary-foreground: 210 78% 10%;
+    --secondary: 210 60% 30%;
+    --secondary-foreground: 214 32% 91%;
+    --muted: 210 60% 20%;
+    --muted-foreground: 215 16% 62%;
+    --accent: 210 60% 30%;
+    --accent-foreground: 214 32% 91%;
+    --destructive: 348 90% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 60% 20%;
+    --input: 210 60% 20%;
+    --ring: 42 79% 46%;
+    --radius: 0.5rem;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', 'Geist', sans-serif;
+    background-color: var(--navy-950);
+    color: var(--slate-200);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    @apply border-border;
+  }
+}

@@ -1,0 +1,13 @@
+var R=require("../../../../chunks/ssr/[turbopack]_runtime.js")("server/app/student/booking/[hostelId]/page.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0hs.mp3._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_0wccoct.js")
+R.c("server/chunks/ssr/[root-of-the-server]__13xtihv._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0ucemvw._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__10lfexp._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_client_components_0inhx6q._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_forbidden_0ghu-f7.js")
+R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_0cjv-23.js")
+R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_0lgvd_..js")
+R.c("server/chunks/ssr/_next-internal_server_app_student_booking_[hostelId]_page_actions_0y6t_r2.js")
+R.m(71142)
+module.exports=R.m(71142).exports

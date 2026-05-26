@@ -1,61 +1,54 @@
 'use client';
 
 import React from 'react';
-import { ArrowRight, LucideIcon } from 'lucide-react';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 interface StatusCardProps {
   title: string;
   statusText: string;
-  badgeType: 'primary' | 'success' | 'warning' | 'danger';
+  badgeType: 'success' | 'warning' | 'danger';
   explanation: string;
   actionText?: string;
   actionHref?: string;
   icon: React.ReactNode;
 }
 
-export default function StatusCard({ 
-  title, 
-  statusText, 
-  badgeType, 
-  explanation, 
-  actionText, 
-  actionHref,
-  icon 
-}: StatusCardProps) {
-  const getBadgeClass = () => {
-    switch (badgeType) {
-      case 'success': return 'badge-success';
-      case 'warning': return 'badge-warning';
-      case 'danger': return 'badge-danger';
-      default: return 'badge-primary';
-    }
-  };
+const badgeStyles = {
+  success: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/15',
+  warning: 'bg-amber-500/10 text-amber-400 border-amber-500/15',
+  danger: 'bg-rose-500/10 text-rose-400 border-rose-500/15',
+};
 
+export default function StatusCard({ title, statusText, badgeType, explanation, actionText, actionHref, icon }: StatusCardProps) {
   return (
-    <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:scale-[1.005] transition-all">
-      <div>
-        <div className="flex justify-between items-start mb-4">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{title}</span>
-          <span className={`badge ${getBadgeClass()}`}>{statusText}</span>
+    <div className="group bg-[#0a2240]/60 backdrop-blur-sm border border-[#1e5faf]/15 rounded-2xl p-5 hover:border-[#1e5faf]/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
+      <div className="flex items-start gap-3 mb-3">
+        <div className="w-10 h-10 rounded-xl bg-[#0f3058]/60 border border-[#1e5faf]/15 flex items-center justify-center text-[#4a9eff] flex-shrink-0">
+          {icon}
         </div>
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500">
-            {icon}
-          </div>
-          <p className="text-xs font-semibold text-slate-500 leading-relaxed">{explanation}</p>
+        <div className="min-w-0">
+          <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.08em] mb-1">
+            {title}
+          </h4>
+          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${badgeStyles[badgeType]}`}>
+            {statusText}
+          </span>
         </div>
       </div>
+
+      <p className="text-[12px] text-slate-400 leading-relaxed mb-4 font-medium">
+        {explanation}
+      </p>
+
       {actionText && actionHref && (
-        <div className="mt-4 pt-4 border-t border-slate-50">
-          <Link 
-            href={actionHref}
-            className="inline-flex items-center gap-1 text-xs font-extrabold text-blue-600 hover:text-blue-750 transition-colors"
-          >
-            <span>{actionText}</span>
-            <ArrowRight size={14} />
-          </Link>
-        </div>
+        <Link
+          href={actionHref}
+          className="group/link inline-flex items-center gap-1.5 text-[11px] font-bold text-[#4a9eff] hover:text-white transition-colors"
+        >
+          <span>{actionText}</span>
+          <ArrowRight size={12} className="group-hover/link:translate-x-0.5 transition-transform" />
+        </Link>
       )}
     </div>
   );

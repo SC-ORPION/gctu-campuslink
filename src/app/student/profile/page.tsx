@@ -48,7 +48,7 @@ export default function StudentProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12">
+    <div className="min-h-screen bg-[#06182e]/40 py-12">
       <div className="container max-w-4xl">
         <button onClick={() => router.push('/student/dashboard')} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors font-bold text-sm mb-6">
           <ChevronLeft size={20} /> Back to Dashboard
@@ -57,14 +57,14 @@ export default function StudentProfilePage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Identity details */}
-          <div className="lg:col-span-7 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
-            <div className="flex items-center gap-4 pb-6 border-b border-slate-100">
+          <div className="lg:col-span-7 bg-[#0a2240]/60 backdrop-blur-sm p-8 rounded-[2rem] border border-[#1e5faf]/15 shadow-[0_4px_24px_rgba(0,0,0,0.3)] space-y-6">
+            <div className="flex items-center gap-4 pb-6 border-b border-[#1e5faf]/15">
               <div className="w-16 h-16 bg-primary/15 text-primary text-2xl font-black rounded-3xl flex items-center justify-center">
                 {user?.full_name?.charAt(0)}
               </div>
               <div>
                 <h1 className="text-2xl font-black text-slate-900">{user?.full_name}</h1>
-                <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">
+                <span className="bg-[#0f3058]/30 text-slate-300 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">
                   Student Member
                 </span>
               </div>
@@ -75,7 +75,7 @@ export default function StudentProfilePage() {
                 <Mail className="text-slate-400" size={18} />
                 <div>
                   <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Email Address</div>
-                  <div className="text-slate-800 font-bold">{user?.email}</div>
+                  <div className="text-white font-bold">{user?.email}</div>
                 </div>
               </div>
 
@@ -83,7 +83,7 @@ export default function StudentProfilePage() {
                 <User className="text-slate-400" size={18} />
                 <div>
                   <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Student ID</div>
-                  <div className="text-slate-800 font-bold">{user?.student_id || 'Not Assigned'}</div>
+                  <div className="text-white font-bold">{user?.student_id || 'Not Assigned'}</div>
                 </div>
               </div>
 
@@ -91,7 +91,7 @@ export default function StudentProfilePage() {
                 <User className="text-slate-400" size={18} />
                 <div>
                   <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Gender Preference</div>
-                  <div className="text-slate-800 font-bold capitalize">{user?.gender?.toLowerCase() || 'Unspecified'}</div>
+                  <div className="text-white font-bold capitalize">{user?.gender?.toLowerCase() || 'Unspecified'}</div>
                 </div>
               </div>
             </div>
@@ -125,7 +125,7 @@ export default function StudentProfilePage() {
                 </div>
               ) : (
                 <div className="bg-slate-850/50 p-6 rounded-2xl border border-slate-800 text-center text-xs font-semibold text-slate-500">
-                  <Info className="mx-auto text-slate-600 mb-2" size={24} />
+                  <Info className="mx-auto text-slate-300 mb-2" size={24} />
                   No academic program linked to this student profile yet. Admin will define your faculty upon registration verification.
                 </div>
               )}
