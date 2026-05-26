@@ -47,7 +47,7 @@ export function middleware(request: NextRequest) {
 
   // 5. Admin Portal Protection (/admin/*)
   if (pathname.startsWith('/admin')) {
-    if (userRoleCookie !== 'admin') {
+    if (userRoleCookie && userRoleCookie !== 'admin') {
       // Redirect students or others to their cockpit dashboard
       const studentDashboard = new URL('/student/dashboard', request.url);
       return NextResponse.redirect(studentDashboard);
@@ -56,7 +56,7 @@ export function middleware(request: NextRequest) {
 
   // 6. Student Cockpit Protection (/student/*)
   if (pathname.startsWith('/student')) {
-    if (userRoleCookie !== 'student' && userRoleCookie !== 'student_user') {
+    if (userRoleCookie && userRoleCookie !== 'student' && userRoleCookie !== 'student_user') {
       // Redirect admins to their authorized dashboard
       const adminDashboard = new URL('/admin/dashboard', request.url);
       return NextResponse.redirect(adminDashboard);

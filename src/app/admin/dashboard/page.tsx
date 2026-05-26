@@ -71,7 +71,7 @@ export default function AdminDashboardPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="relative bg-gradient-to-br from-[#0a2240] to-[#0f3058] border border-[#1e5faf]/15 rounded-2xl p-6 overflow-hidden"
+        className="relative bg-gradient-to-br from-[#0a2240] to-[#0f3058] border-l-8 border-l-[#d4af37] border-y border-r border-[#1e5faf]/20 rounded-2xl p-6 overflow-hidden"
       >
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#d4af37]/3 rounded-full blur-[80px]" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/20 to-transparent" />
@@ -121,9 +121,9 @@ export default function AdminDashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
             {/* Left: Allocation Queue */}
-            <div className="lg:col-span-8 bg-[#0a2240]/60 backdrop-blur-sm border border-[#1e5faf]/15 rounded-2xl p-6 space-y-4">
+            <div className="lg:col-span-8 bg-[#0a2240]/60 backdrop-blur-sm border-t-4 border-t-blue-700 border-2 border-amber-500/40 rounded-2xl p-6 space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-[11px] font-extrabold text-slate-300 uppercase tracking-[0.1em] flex items-center gap-2">
+                <h3 className="text-[11px] font-extrabold text-[#d4af37] uppercase tracking-[0.1em] flex items-center gap-2">
                   <Play size={13} className="text-[#d4af37] fill-[#d4af37]" />
                   <span>Allocation Backlog Queue</span>
                 </h3>

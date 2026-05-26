@@ -11,7 +11,7 @@ export default function OccupancyOverview() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
       {stats.map((s, idx) => (
-        <div key={idx} className="bg-[#0a2240]/60 backdrop-blur-sm p-5 rounded-2xl border border-[#1e5faf]/15 flex items-center gap-4 hover:border-[#1e5faf]/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
+        <div key={idx} className="bg-[#0a2240]/60 backdrop-blur-sm p-5 rounded-2xl border-l-8 border-l-[#d4af37] border border-[#1e5faf]/25 flex items-center gap-4 hover:border-[#1e5faf]/50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
           <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${s.bg} ${s.color}`}>
             {s.icon}
           </div>

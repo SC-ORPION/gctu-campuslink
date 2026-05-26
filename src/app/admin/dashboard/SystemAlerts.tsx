@@ -8,7 +8,7 @@ export default function SystemAlerts() {
   ];
 
   return (
-    <div className="bg-[#0a2240]/60 backdrop-blur-sm p-5 rounded-2xl border border-[#1e5faf]/15 space-y-4">
+    <div className="bg-[#0a2240]/60 backdrop-blur-sm p-5 rounded-2xl border-t-4 border-t-blue-700 border border-[#1e5faf]/25 space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-[10px] font-extrabold text-slate-300 uppercase tracking-[0.1em]">Active System Feeds</h3>
         <span className="text-[9px] font-extrabold text-rose-400 bg-rose-500/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-rose-500/15 flex items-center gap-1">
