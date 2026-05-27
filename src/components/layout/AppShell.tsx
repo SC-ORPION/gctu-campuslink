@@ -13,10 +13,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#06182e] flex items-center justify-center">
+      <div className="app-shell justify-center items-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="premium-spinner" />
-          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
+          <div className="w-10 h-10 border-4 border-slate-200 border-t-[#0F172A] rounded-full animate-spin"></div>
+          <span className="text-[11px] font-bold text-[#475569] uppercase tracking-widest">
             Restoring session...
           </span>
         </div>
@@ -31,12 +31,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   // Authenticated layout
   return (
-    <div className="min-h-screen bg-[#06182e] text-slate-100 flex">
+    <div className="app-shell">
       <SidebarSystem />
 
-      <div className="flex-1 flex flex-col lg:pl-64 min-w-0">
+      <div className="app-main-wrapper">
         <TopbarSystem />
-        <main className="flex-grow p-5 md:p-8 max-w-[1440px] w-full mx-auto">
+        <main className="app-content">
           <AnimatePresence mode="wait">
             <motion.div
               key={typeof window !== 'undefined' ? window.location.pathname : 'page'}

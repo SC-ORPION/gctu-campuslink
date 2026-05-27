@@ -17,19 +17,19 @@ export default function BookingProgress({ currentStatus }: { currentStatus: stri
   const currentIndex = statusOrder.indexOf(currentStatus);
 
   return (
-    <div className="bg-[#0a2240]/60 backdrop-blur-sm border border-[#1e5faf]/15 rounded-2xl p-6">
-      <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.12em] mb-5">
+    <div className="premium-card">
+      <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-8">
         Booking Progress
       </h3>
 
       <div className="flex items-center justify-between relative">
         {/* Connecting Line */}
-        <div className="absolute top-4 left-8 right-8 h-px bg-[#0f3058]">
+        <div className="absolute top-4 left-8 right-8 h-px bg-[#E2E8F0]">
           <motion.div
             initial={{ scaleX: 0 }}
             animate={{ scaleX: currentIndex >= 0 ? (currentIndex + 1) / STEPS.length : 0 }}
             transition={{ duration: 1, ease: 'easeInOut' }}
-            className="h-full bg-gradient-to-r from-[#d4af37] to-[#10b981] origin-left"
+            className="h-full bg-gradient-to-r from-[#1D4ED8] to-[#059669] origin-left"
           />
         </div>
 
@@ -43,27 +43,27 @@ export default function BookingProgress({ currentStatus }: { currentStatus: stri
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.4, delay: i * 0.1 }}
-                className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 transition-all duration-300 ${
+                className={`w-8 h-8 rounded-full flex items-center justify-center mb-3 transition-all duration-300 ${
                   isCompleted
                     ? isCurrent
-                      ? 'bg-[#d4af37] shadow-[0_0_15px_rgba(212,175,55,0.3)]'
-                      : 'bg-[#10b981] shadow-[0_0_10px_rgba(16,185,129,0.2)]'
-                    : 'bg-[#0f3058] border border-[#1e5faf]/20'
+                      ? 'bg-[#1D4ED8] shadow-md ring-4 ring-[#EFF6FF]'
+                      : 'bg-[#059669] shadow-sm'
+                    : 'bg-white border-2 border-[#E2E8F0]'
                 }`}
               >
                 {isCompleted ? (
                   isCurrent ? (
-                    <Clock size={14} className="text-[#06182e]" />
+                    <Clock size={14} className="text-white" />
                   ) : (
                     <CheckCircle2 size={14} className="text-white" />
                   )
                 ) : (
-                  <Circle size={14} className="text-slate-600" />
+                  <Circle size={14} className="text-[#94A3B8]" />
                 )}
               </motion.div>
 
-              <span className={`text-[10px] font-bold text-center leading-tight ${
-                isCompleted ? 'text-white' : 'text-slate-500'
+              <span className={`text-[11px] font-bold text-center leading-tight ${
+                isCompleted ? 'text-[#0F172A]' : 'text-[#64748B]'
               }`}>
                 {step.label}
               </span>

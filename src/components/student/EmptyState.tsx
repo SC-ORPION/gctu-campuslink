@@ -13,22 +13,22 @@ interface EmptyStateProps {
 
 export default function EmptyState({ title, description, actionText, actionHref }: EmptyStateProps) {
   return (
-    <div className="bg-[#0a2240]/40 backdrop-blur-sm border border-[#1e5faf]/15 rounded-2xl p-12 text-center">
-      <div className="w-16 h-16 mx-auto rounded-2xl bg-[#0f3058]/60 border border-[#1e5faf]/15 flex items-center justify-center mb-5">
-        <Building size={28} className="text-slate-500" />
+    <div className="premium-card text-center py-12">
+      <div className="w-16 h-16 mx-auto rounded-full bg-[#EFF6FF] border border-[#E2E8F0] flex items-center justify-center mb-5">
+        <Building size={28} className="text-[#1D4ED8]" />
       </div>
 
-      <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
-      <p className="text-[13px] text-slate-400 max-w-md mx-auto leading-relaxed mb-6 font-medium">
+      <h3 className="text-xl font-bold text-[#0F172A] mb-2">{title}</h3>
+      <p className="text-sm text-[#64748B] max-w-md mx-auto leading-relaxed mb-8 font-medium">
         {description}
       </p>
 
       <Link
         href={actionHref}
-        className="group inline-flex items-center gap-2 px-6 py-3 bg-[#d4af37] hover:bg-[#e0bc45] text-[#06182e] font-extrabold text-[11px] uppercase tracking-wider rounded-xl transition-all duration-300 hover:-translate-y-0.5 shadow-lg shadow-[#d4af37]/15"
+        className="btn btn-primary"
       >
         <span>{actionText}</span>
-        <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+        <ArrowRight size={16} />
       </Link>
     </div>
   );

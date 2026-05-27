@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
+import Footer from '../components/Footer';
 
 export default function Home() {
   const router = useRouter();
@@ -21,96 +22,105 @@ export default function Home() {
   }, [currentUser, router]);
 
   return (
-    <div 
-      className="min-h-screen w-full flex flex-col justify-between relative bg-cover bg-center overflow-x-hidden selection:bg-blue-600 selection:text-white"
-      style={{
-        backgroundImage: `linear-gradient(to bottom, rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.65)), url('/assets/gctu-campus-2.jpg')`,
-      }}
-    >
-      {/* Top and Centered Branding Panel */}
-      <header className="w-full max-w-7xl mx-auto px-6 pt-16 pb-8 flex flex-col items-center text-center relative z-10">
-        <div className="w-28 h-28 rounded-2xl overflow-hidden bg-white p-2.5 border border-white/20 shadow-xl mb-6 transition-transform duration-300 hover:scale-105">
-          <img 
-            src="/assets/gctu-logo.jpg" 
-            alt="GCTU Logo" 
-            className="w-full h-full object-contain"
-          />
+    <div className="min-h-screen w-full flex flex-col bg-[#F8FAFC]">
+      
+      {/* Premium Hero Section */}
+      <section 
+        className="relative w-full py-24 lg:py-32 flex flex-col items-center justify-center bg-[#0F172A] border-b border-[#1E293B] overflow-hidden"
+      >
+        <div className="absolute inset-0 z-0 opacity-20 bg-[url('/assets/gctu-campus-2.jpg')] bg-cover bg-center"></div>
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#0F172A]/80 to-[#0F172A]"></div>
+        
+        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto">
+          <div className="w-24 h-24 rounded-2xl overflow-hidden bg-white p-2 mb-8 shadow-xl shadow-black/50">
+            <img 
+              src="/assets/gctu-logo.jpg" 
+              alt="GCTU Logo" 
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight mb-4 font-['Outfit']">
+            CampusLink Allocation System
+          </h1>
+          <p className="text-[#64748B] text-lg md:text-xl font-medium max-w-2xl">
+            The central platform for managing student housing and accommodations at Ghana Communication Technology University.
+          </p>
         </div>
-        <h1 className="text-3xl md:text-5xl font-bold text-white tracking-tight drop-shadow-md">
-          GCTU Hostel Allocation System
-        </h1>
-      </header>
+      </section>
 
-      {/* Three-Column Information & Access Panel */}
-      <main className="w-full max-w-7xl mx-auto px-6 py-8 relative z-10 my-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      {/* Services Section */}
+      <main className="flex-1 w-full max-w-[1400px] mx-auto px-6 py-16 md:py-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
-          {/* Box 1: About GCTU Hostels */}
-          <div className="bg-black/85 border-2 border-amber-500/40 backdrop-blur-md rounded-3xl p-8 flex flex-col justify-between items-center text-center shadow-[0_4px_30px_rgba(212,175,55,0.15)] transition-all duration-300 hover:border-amber-500/70 hover:shadow-[0_4px_35px_rgba(212,175,55,0.25)] hover:-translate-y-1">
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-amber-500 tracking-wide uppercase">
-                About GCTU Hostels
-              </h2>
-              <p className="text-slate-100 text-sm leading-relaxed font-semibold">
-                Click to Read More about the Current Application Session. This should guide you in your application for a bed in GCTU Hostels. You can also find Hostel and Room Prices for your consideration.
+          {/* Box 1: About */}
+          <div className="premium-card flex flex-col h-full">
+            <div className="flex-1">
+              <div className="w-12 h-12 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] flex items-center justify-center mb-6">
+                <span className="text-[#0F172A] font-bold text-lg">i</span>
+              </div>
+              <h2 className="premium-card-title mb-4">About GCTU Hostels</h2>
+              <p className="text-[#475569] text-sm leading-relaxed">
+                Read more about the current application session. This guide helps you navigate the application process for a bed in GCTU Hostels, including prices and availability.
               </p>
             </div>
-            <button
-              onClick={() => router.push('/support')}
-              className="mt-6 inline-flex items-center text-base font-bold text-blue-400 hover:text-blue-300 transition-colors gap-1 group/btn"
-            >
-              <span>Read More</span>
-              <span className="group-hover/btn:translate-x-1 transition-transform duration-200">»</span>
-            </button>
+            <div className="mt-8 pt-6 border-t border-[#E2E8F0]">
+              <button
+                onClick={() => router.push('/support')}
+                className="text-[#0F172A] font-semibold text-sm hover:text-[#D4A017] transition-colors flex items-center gap-2"
+              >
+                Read Information &rarr;
+              </button>
+            </div>
           </div>
 
-          {/* Box 2: Apply for Reservation */}
-          <div className="bg-black/85 border-2 border-amber-500/40 backdrop-blur-md rounded-3xl p-8 flex flex-col justify-between items-center text-center shadow-[0_4px_30px_rgba(212,175,55,0.15)] transition-all duration-300 hover:border-amber-500/70 hover:shadow-[0_4px_35px_rgba(212,175,55,0.25)] hover:-translate-y-1">
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-amber-500 tracking-wide uppercase">
-                Apply for Reservation
-              </h2>
-              <p className="text-slate-100 text-sm leading-relaxed font-semibold">
-                Click on the Apply Now link to submit your application for GCTU Hostel Bed Allocation. Fill in the form and submit. Note that this application is not an automatic allocation of a bed as many students will be applying.
+          {/* Box 2: Apply */}
+          <div className="premium-card flex flex-col h-full border-[#0F172A] shadow-md relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#0F172A]/5 rounded-bl-full -z-10"></div>
+            <div className="flex-1 relative z-10">
+              <div className="w-12 h-12 rounded-lg bg-[#0F172A] text-white flex items-center justify-center mb-6">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              </div>
+              <h2 className="premium-card-title mb-4">Apply for Reservation</h2>
+              <p className="text-[#475569] text-sm leading-relaxed">
+                Submit your application for bed allocation. Please note that application does not guarantee automatic allocation due to high demand.
               </p>
             </div>
-            <button
-              onClick={() => router.push('/auth/login')}
-              className="mt-6 inline-flex items-center text-base font-bold text-blue-400 hover:text-blue-300 transition-colors gap-1 group/btn"
-            >
-              <span>Apply Now</span>
-              <span className="group-hover/btn:translate-x-1 transition-transform duration-200">»</span>
-            </button>
+            <div className="mt-8 pt-6 border-t border-[#E2E8F0] relative z-10">
+              <button
+                onClick={() => router.push('/auth/login')}
+                className="text-[#D4A017] font-bold text-sm hover:text-[#0F172A] transition-colors flex items-center gap-2"
+              >
+                Start Application &rarr;
+              </button>
+            </div>
           </div>
 
           {/* Box 3: Portal Login */}
-          <div className="bg-black/85 border-2 border-amber-500/40 backdrop-blur-md rounded-3xl p-8 flex flex-col justify-between items-center text-center shadow-[0_4px_30px_rgba(212,175,55,0.15)] transition-all duration-300 hover:border-amber-500/70 hover:shadow-[0_4px_35px_rgba(212,175,55,0.25)] hover:-translate-y-1">
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-amber-500 tracking-wide uppercase">
-                Portal Login
-              </h2>
-              <p className="text-slate-100 text-sm leading-relaxed font-semibold">
-                Click on the Portal Login to access your GCTU Hostels Management Portal. You will need your Username and Password. Click on Reset Password to change your Password if you have forgotten it.
+          <div className="premium-card flex flex-col h-full">
+            <div className="flex-1">
+              <div className="w-12 h-12 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] flex items-center justify-center mb-6">
+                <svg className="w-6 h-6 text-[#0F172A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+              </div>
+              <h2 className="premium-card-title mb-4">Portal Access</h2>
+              <p className="text-[#475569] text-sm leading-relaxed">
+                Access your personalized management portal to track payments, view your room slip, and report any incidents.
               </p>
             </div>
-            <button
-              onClick={() => router.push('/auth/login')}
-              className="mt-6 inline-flex items-center text-base font-bold text-blue-400 hover:text-blue-300 transition-colors gap-1 group/btn"
-            >
-              <span>Portal Login</span>
-              <span className="group-hover/btn:translate-x-1 transition-transform duration-200">»</span>
-            </button>
+            <div className="mt-8 pt-6 border-t border-[#E2E8F0]">
+              <button
+                onClick={() => router.push('/auth/login')}
+                className="text-[#0F172A] font-semibold text-sm hover:text-[#D4A017] transition-colors flex items-center gap-2"
+              >
+                Sign In to Portal &rarr;
+              </button>
+            </div>
           </div>
 
         </div>
       </main>
 
-      {/* Footer copyright */}
-      <footer className="w-full bg-white border-t border-slate-200 py-6 text-center text-xs md:text-sm text-slate-650 relative z-10 mt-auto">
-        <div className="max-w-7xl mx-auto px-6">
-          <strong>Copyright &copy; 2026 <a href="https://gctu.edu.gh" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">Ghana Communication Technology University</a>.</strong> All rights reserved.
-        </div>
-      </footer>
+      {/* Premium Footer */}
+      <Footer />
     </div>
   );
 }

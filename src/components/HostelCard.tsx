@@ -62,12 +62,12 @@ export default function HostelCard({ hostel }: HostelCardProps) {
 
   return (
     <motion.div 
-      className="group relative bg-white dark:bg-zinc-950 rounded-2xl overflow-hidden border border-[#1e5faf]/15 dark:border-zinc-900 shadow-[0_4px_24px_rgba(0,0,0,0.3)] hover:border-slate-300 dark:hover:border-zinc-800 hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between"
+      className="group relative bg-white rounded-2xl overflow-hidden border border-[#E2E8F0] shadow-sm hover:border-[#CBD5E1] hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
     >
       {/* 1. Carousel */}
-      <div className="relative h-48 w-full bg-[#06182e]/40 dark:bg-zinc-900 overflow-hidden">
+      <div className="relative h-48 w-full bg-[#F1F5F9] overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.img 
             key={currentImage}
@@ -84,22 +84,22 @@ export default function HostelCard({ hostel }: HostelCardProps) {
         {images.length > 1 && (
           <>
             <button 
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#0a2240]/60 backdrop-blur-sm/80 dark:bg-zinc-950/80 backdrop-blur-md border border-[#1e5faf]/15 dark:border-zinc-800 flex items-center justify-center text-slate-200 dark:text-zinc-300 opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-[0_4px_24px_rgba(0,0,0,0.3)]"
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm border border-[#E2E8F0] flex items-center justify-center text-[#0F172A] opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-sm"
               onClick={prevImage}
             >
-              <ChevronLeft size={16} />
+              <ChevronLeft size={18} />
             </button>
             <button 
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#0a2240]/60 backdrop-blur-sm/80 dark:bg-zinc-950/80 backdrop-blur-md border border-[#1e5faf]/15 dark:border-zinc-800 flex items-center justify-center text-slate-200 dark:text-zinc-300 opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-[0_4px_24px_rgba(0,0,0,0.3)]"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm border border-[#E2E8F0] flex items-center justify-center text-[#0F172A] opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-sm"
               onClick={nextImage}
             >
-              <ChevronRight size={16} />
+              <ChevronRight size={18} />
             </button>
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-10">
               {images.map((_, i) => (
                 <div 
                   key={i} 
-                  className={`h-1 rounded-full transition-all duration-200 ${i === currentImage ? 'w-3 bg-[#0a2240]/60 backdrop-blur-sm' : 'w-1 bg-[#0a2240]/60 backdrop-blur-sm/30'}`} 
+                  className={`h-1.5 rounded-full transition-all duration-200 ${i === currentImage ? 'w-4 bg-white' : 'w-1.5 bg-white/60'}`} 
                 />
               ))}
             </div>
@@ -107,12 +107,12 @@ export default function HostelCard({ hostel }: HostelCardProps) {
         )}
 
         {hostel.status === 'OPEN' && (
-          <div className="absolute top-3 left-3 bg-emerald-600 text-white shadow-[0_2px_8px_rgba(5,150,105,0.2)] px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wide flex items-center gap-1 z-10">
-            <ShieldCheck size={10} /> Verified
+          <div className="absolute top-3 left-3 bg-[#059669] text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 z-10 shadow-sm">
+            <ShieldCheck size={12} /> Verified
           </div>
         )}
         
-        <div className="absolute top-3 right-3 bg-slate-900/60 dark:bg-zinc-950/80 backdrop-blur-md border border-white/10 dark:border-zinc-800 px-2.5 py-0.5 rounded-full text-[9px] font-extrabold text-white shadow-[0_4px_24px_rgba(0,0,0,0.3)] z-10 uppercase tracking-wide">
+        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md border border-[#E2E8F0] px-3 py-1 rounded-full text-[10px] font-bold text-[#0F172A] shadow-sm z-10 uppercase tracking-wider">
           {hostel.campus}
         </div>
       </div>
@@ -120,45 +120,45 @@ export default function HostelCard({ hostel }: HostelCardProps) {
       {/* 2. Body Details */}
       <div className="p-5 flex-1 flex flex-col justify-between">
         <div>
-          <div className="flex justify-between items-start gap-2 mb-2">
+          <div className="flex justify-between items-start gap-2 mb-3">
             <div>
-              <h3 className="text-base font-extrabold text-slate-900 dark:text-zinc-50 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-snug">
+              <h3 className="text-lg font-bold text-[#0F172A] group-hover:text-[#1D4ED8] transition-colors leading-snug">
                 {hostel.name}
               </h3>
-              <div className="flex items-center gap-1 text-slate-400 dark:text-zinc-500 mt-0.5">
-                <MapPin size={12} className="text-indigo-500 dark:text-indigo-400" />
+              <div className="flex items-center gap-1.5 text-[#64748B] mt-1">
+                <MapPin size={14} className="text-[#1D4ED8]" />
                 <span className="text-xs font-semibold">{hostel.location_name}</span>
               </div>
             </div>
             <div className="text-right flex-shrink-0">
-              <div className="font-black text-sm text-indigo-600 dark:text-indigo-400">{getPriceRange()}</div>
-              <div className="text-[9px] text-slate-400 dark:text-zinc-500 font-bold uppercase tracking-tight">Per Acad. Year</div>
+              <div className="font-bold text-sm text-[#1D4ED8]">{getPriceRange()}</div>
+              <div className="text-[10px] text-[#64748B] font-bold uppercase tracking-tight mt-0.5">Per Acad. Year</div>
             </div>
           </div>
 
           {/* Gender Rule Badge & Distance info */}
-          <div className="flex items-center gap-2 mb-4">
-            <span className={`px-2 py-0.5 rounded text-[9px] font-extrabold uppercase tracking-wider ${
-              hostel.gender_rule === 'MALE_ONLY' ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/30' :
-              hostel.gender_rule === 'FEMALE_ONLY' ? 'bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/30' : 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30'
+          <div className="flex items-center gap-2 mb-5">
+            <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
+              hostel.gender_rule === 'MALE_ONLY' ? 'bg-[#DBEAFE] text-[#1D4ED8] border border-[#BFDBFE]' :
+              hostel.gender_rule === 'FEMALE_ONLY' ? 'bg-[#FCE7F3] text-[#BE185D] border border-[#FBCFE8]' : 'bg-[#D1FAE5] text-[#059669] border border-[#A7F3D0]'
             }`}>
               {hostel.gender_rule?.replace('_ONLY', '').replace('_', ' ') || 'MIXED'}
             </span>
-            <span className="text-slate-200 dark:text-zinc-800">•</span>
-            <span className="text-[10px] font-bold text-slate-500 dark:text-zinc-400 flex items-center gap-0.5">
-              <Info size={11} className="text-slate-400 dark:text-zinc-550" /> {hostel.distance_from_campus || '1.0 km'}
+            <span className="text-[#CBD5E1]">•</span>
+            <span className="text-xs font-semibold text-[#64748B] flex items-center gap-1">
+              <Info size={14} className="text-[#94A3B8]" /> {hostel.distance_from_campus || '1.0 km'}
             </span>
           </div>
 
           {/* Occupancy Indicator Progress Bar */}
-          <div className="space-y-1 mb-5">
-            <div className="flex justify-between text-[10px] font-bold text-slate-450 dark:text-zinc-500">
+          <div className="space-y-1.5 mb-6">
+            <div className="flex justify-between text-[11px] font-bold text-[#475569]">
               <span>Beds Occupied</span>
               <span>{filled} / {capacity} beds ({percent}%)</span>
             </div>
-            <div className="w-full bg-[#0f3058]/30 dark:bg-zinc-900 h-1.5 rounded-full overflow-hidden">
+            <div className="w-full bg-[#F1F5F9] h-2 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-indigo-500 to-teal-500 shadow-[0_4px_24px_rgba(0,0,0,0.3)] rounded-full transition-all duration-300"
+                className="h-full bg-[#1D4ED8] rounded-full transition-all duration-300"
                 style={{ width: `${percent}%` }}
               ></div>
             </div>
@@ -166,16 +166,16 @@ export default function HostelCard({ hostel }: HostelCardProps) {
         </div>
 
         {/* 3. Action Buttons */}
-        <div className="grid grid-cols-2 gap-2 mt-2 pt-3 border-t border-[#1e5faf]/15 dark:border-zinc-900">
+        <div className="grid grid-cols-2 gap-3 mt-2 pt-4 border-t border-[#E2E8F0]">
           <Link 
             href={`/student/hostels/${hostel.id}`}
-            className="bg-[#06182e]/40 hover:bg-[#0f3058]/30 dark:bg-zinc-900 dark:hover:bg-zinc-800/80 border border-[#1e5faf]/15 dark:border-zinc-800 text-slate-200 dark:text-zinc-300 py-2.5 rounded-xl font-bold text-xs text-center transition-colors"
+            className="btn btn-secondary flex items-center justify-center h-10 px-0 text-xs"
           >
             View Details
           </Link>
           <Link 
             href={`/student/hostels/${hostel.id}`}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-bold text-xs text-center transition-colors shadow-[0_4px_24px_rgba(0,0,0,0.3)]"
+            className="btn btn-primary flex items-center justify-center h-10 px-0 text-xs"
           >
             Select Hostel
           </Link>

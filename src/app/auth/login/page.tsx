@@ -136,113 +136,110 @@ export default function LoginPage() {
     }
   };
 
-  const inputClass = "w-full h-12 bg-white border border-slate-300 rounded-xl pl-11 pr-4 text-sm text-slate-900 focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-500/20 transition-all font-medium placeholder:text-slate-400";
-  const selectClass = "w-full h-12 bg-white border border-slate-300 rounded-xl px-4 text-sm text-slate-900 focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-500/20 transition-all font-medium appearance-none";
-  const labelClass = "block text-xs font-semibold text-slate-700 mb-1.5 uppercase tracking-wider";
-
   return (
-    <div className="min-h-screen bg-[#F5F7FB] flex items-center justify-center px-6 py-12 relative overflow-hidden">
-      {/* Background soft ambient accents */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#d4af37]/5 rounded-full blur-[120px] pointer-events-none" />
+    <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center px-6 py-12 relative overflow-hidden">
+      {/* Background Soft Accents */}
+      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-blue-100 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2"></div>
+      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-amber-50 rounded-full blur-3xl opacity-50 translate-y-1/2 -translate-x-1/2"></div>
 
-      {/* Main Centered Dual-Panel Auth Shell */}
+      {/* Main Container */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative z-10 w-full max-w-5xl grid lg:grid-cols-2 bg-white rounded-3xl shadow-2xl border border-slate-200/60 overflow-hidden min-h-[600px]"
+        className="premium-card w-full max-w-5xl p-0 overflow-hidden flex flex-col lg:flex-row relative z-10"
       >
         {/* Left Panel: Institutional Messaging */}
         <div 
-          className="relative hidden lg:flex flex-col justify-between p-12 text-white bg-slate-900"
-          style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.95)), url('/images/gctu-campus.jpg')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
+          className="relative hidden lg:flex flex-col justify-between p-12 text-white bg-[#0F172A] w-1/2"
         >
-          {/* Top section: Crest & University Name */}
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl overflow-hidden border border-white/20 bg-white p-1">
-              <img src="/assets/gctu-logo.jpg" alt="GCTU Crest" className="w-full h-full object-contain" />
+          <div className="absolute inset-0 opacity-20 bg-[url('/assets/gctu-campus-2.jpg')] bg-cover bg-center"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0F172A]/80 to-[#0F172A]"></div>
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-4 mb-16">
+              <div className="w-12 h-12 rounded-xl bg-white p-1">
+                <img src="/assets/gctu-logo.jpg" alt="GCTU Crest" className="w-full h-full object-contain" />
+              </div>
+              <div>
+                <h1 className="font-bold text-sm tracking-widest text-white uppercase font-['Outfit']">GCTU</h1>
+                <p className="text-[10px] text-[#D4A017] font-bold tracking-widest uppercase">CampusLink Portal</p>
+              </div>
             </div>
-            <div>
-              <h1 className="font-extrabold text-sm tracking-wider text-white uppercase">GCTU</h1>
-              <p className="text-[10px] text-slate-400 font-bold tracking-widest uppercase">CampusLink Portal</p>
+
+            <div className="space-y-4 my-auto">
+              <h2 className="text-4xl font-bold tracking-tight text-white leading-tight font-['Outfit']">
+                Official Hostel <br />
+                Allocation Portal
+              </h2>
+              <p className="text-[#94A3B8] leading-relaxed max-w-sm font-medium">
+                Providing modern infrastructure and secure real-time room booking facilities for all certified students of GCTU.
+              </p>
             </div>
           </div>
 
-          {/* Middle section: Promising message */}
-          <div className="space-y-4 my-auto">
-            <h2 className="text-3xl font-bold tracking-tight text-white leading-tight">
-              Official Hostel <br />
-              Allocation Portal
-            </h2>
-            <p className="text-sm text-slate-300 leading-relaxed max-w-sm">
-              Providing modern infrastructure and secure real-time room booking facilities for all certified students of GCTU.
-            </p>
-          </div>
-
-          {/* Bottom section: Footer info */}
-          <div className="flex justify-between items-center text-xs text-slate-400 border-t border-white/10 pt-6">
-            <span>© 2026 GCTU CampusLink</span>
-            <span className="flex items-center gap-1">
-              <ShieldCheck size={14} className="text-emerald-400" /> Secure Encryption
+          <div className="relative z-10 flex justify-between items-center text-xs text-[#64748B] border-t border-[#1E293B] pt-6 mt-16 font-medium">
+            <span>© {new Date().getFullYear()} GCTU CampusLink</span>
+            <span className="flex items-center gap-1.5 text-[#059669]">
+              <ShieldCheck size={14} /> Secure Authentication
             </span>
           </div>
         </div>
 
-        {/* Right Panel: Auth form in a constrained card structure */}
-        <div className="flex flex-col justify-center p-8 lg:p-12 bg-white">
-          <div className="w-full max-w-md mx-auto">
-            {/* Header branding */}
-            <div className="text-center mb-8">
-              <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-slate-100 mx-auto mb-4 lg:hidden">
-                <img src="/assets/gctu-logo.jpg" alt="GCTU Crest" className="w-full h-full object-cover" />
+        {/* Right Panel: Auth form */}
+        <div className="flex flex-col justify-center p-8 lg:p-12 w-full lg:w-1/2 bg-white">
+          <div className="w-full max-w-sm mx-auto">
+            {/* Header branding for mobile */}
+            <div className="text-center mb-8 lg:hidden">
+              <div className="w-14 h-14 rounded-xl overflow-hidden border border-[#E2E8F0] mx-auto mb-4 bg-white p-1">
+                <img src="/assets/gctu-logo.jpg" alt="GCTU Crest" className="w-full h-full object-contain" />
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 tracking-tight mb-1">
-                {isSignUp ? 'Create Account' : 'Sign In'}
-              </h2>
-              <p className="text-xs text-slate-500 font-medium">GCTU Student Housing System</p>
             </div>
+
+            <h2 className="text-2xl font-bold text-[#0F172A] tracking-tight mb-2 font-['Outfit']">
+              {isSignUp ? 'Create Account' : 'Sign In'}
+            </h2>
+            <p className="text-sm text-[#64748B] font-medium mb-8">
+              Access the GCTU Student Housing System
+            </p>
 
             {/* Error/Success Messages */}
             <AnimatePresence mode="wait">
               {errorMsg && (
-                <motion.div className="bg-rose-50 border border-rose-100 text-rose-600 p-3 rounded-xl flex gap-3 text-xs font-medium mb-5" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-                  <Info size={16} className="flex-shrink-0 mt-0.5" />
+                <motion.div className="bg-[#FEE2E2] text-[#DC2626] px-4 py-3 rounded-lg flex gap-3 text-sm font-medium mb-6" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+                  <Info size={18} className="flex-shrink-0 mt-0.5" />
                   <span>{errorMsg}</span>
                 </motion.div>
               )}
               {successMsg && (
-                <motion.div className="bg-emerald-50 border border-emerald-100 text-emerald-600 p-3 rounded-xl flex gap-3 text-xs font-medium mb-5" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-                  <ShieldCheck size={16} className="flex-shrink-0 mt-0.5" />
+                <motion.div className="bg-[#D1FAE5] text-[#059669] px-4 py-3 rounded-lg flex gap-3 text-sm font-medium mb-6" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+                  <ShieldCheck size={18} className="flex-shrink-0 mt-0.5" />
                   <span>{successMsg}</span>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Standardized Form System */}
+            {/* Form */}
             {!isSignUp ? (
-              <form onSubmit={handleLogin} className="space-y-5">
-                <div>
-                  <label className={labelClass}>Email or Student ID</label>
+              <form onSubmit={handleLogin} className="space-y-6">
+                <div className="form-group">
+                  <label className="form-label">Email or Student ID</label>
                   <div className="relative">
-                    <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input type="text" placeholder="student@gctu.edu.gh" value={emailOrId} onChange={(e) => setEmailOrId(e.target.value)} className={inputClass} required />
+                    <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                    <input type="text" placeholder="student@gctu.edu.gh" value={emailOrId} onChange={(e) => setEmailOrId(e.target.value)} className="form-input pl-12" required />
                   </div>
                 </div>
-                <div>
+                
+                <div className="form-group">
                   <div className="flex justify-between items-center mb-1.5">
-                    <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">Password</label>
-                    <button type="button" className="text-xs font-semibold text-blue-700 hover:text-blue-800 transition-colors" onClick={() => alert("Contact GCTU Housing Administration for credential assistance.")}>Forgot?</button>
+                    <label className="form-label mb-0">Password</label>
+                    <button type="button" className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8]" onClick={() => alert("Contact GCTU Housing Administration for credential assistance.")}>Forgot?</button>
                   </div>
                   <div className="relative">
-                    <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input type={showPassword ? 'text' : 'password'} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className={`${inputClass} pr-12`} required />
-                    <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors" onClick={() => setShowPassword(!showPassword)}>
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                    <input type={showPassword ? 'text' : 'password'} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="form-input pl-12 pr-12" required />
+                    <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#475569]" onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                 </div>
@@ -250,94 +247,102 @@ export default function LoginPage() {
                 <button 
                   type="submit" 
                   disabled={loading} 
-                  className="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium h-12 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 mt-4 disabled:opacity-60 text-sm"
+                  className="btn btn-primary w-full mt-2"
                 >
-                  {loading ? <Loader2 size={16} className="animate-spin" /> : <><span>Portal Access</span><ArrowRight size={16} /></>}
+                  {loading ? <Loader2 size={18} className="animate-spin" /> : <><span>Portal Access</span><ArrowRight size={18} /></>}
                 </button>
 
                 <div className="text-center mt-6">
-                  <button type="button" onClick={() => setIsSignUp(true)} className="text-xs font-semibold text-blue-700 hover:text-blue-800 transition-colors">
-                    Don&apos;t have an account? <span className="underline">Register Portal Access</span>
+                  <button type="button" onClick={() => setIsSignUp(true)} className="text-sm font-medium text-[#475569] hover:text-[#0F172A]">
+                    Don&apos;t have an account? <span className="text-[#2563EB] font-semibold">Register Portal Access</span>
                   </button>
                 </div>
               </form>
             ) : (
-              <form onSubmit={handleRegister} className="space-y-4 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
-                <div>
-                  <label className={labelClass}>Full Name</label>
+              <form onSubmit={handleRegister} className="space-y-4 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+                <div className="form-group">
+                  <label className="form-label">Full Name</label>
                   <div className="relative">
-                    <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input type="text" placeholder="John Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} className={inputClass} required />
+                    <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                    <input type="text" placeholder="John Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} className="form-input pl-12" required />
                   </div>
                 </div>
-                <div>
-                  <label className={labelClass}>Student ID</label>
+                
+                <div className="form-group">
+                  <label className="form-label">Student ID</label>
                   <div className="relative">
-                    <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input type="text" placeholder="GCTU-022201" value={studentId} onChange={(e) => setStudentId(e.target.value)} className={inputClass} required />
+                    <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                    <input type="text" placeholder="GCTU-022201" value={studentId} onChange={(e) => setStudentId(e.target.value)} className="form-input pl-12" required />
                   </div>
                 </div>
-                <div>
-                  <label className={labelClass}>Email Address</label>
+
+                <div className="form-group">
+                  <label className="form-label">Email Address</label>
                   <div className="relative">
-                    <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input type="email" placeholder="student@gctu.edu.gh" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} required />
+                    <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                    <input type="email" placeholder="student@gctu.edu.gh" value={email} onChange={(e) => setEmail(e.target.value)} className="form-input pl-12" required />
                   </div>
                 </div>
-                <div>
-                  <label className={labelClass}>Phone Number</label>
+
+                <div className="form-group">
+                  <label className="form-label">Phone Number</label>
                   <div className="relative">
-                    <Phone size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input type="tel" placeholder="+233 24 000 0000" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} className={inputClass} required />
+                    <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                    <input type="tel" placeholder="+233 24 000 0000" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} className="form-input pl-12" required />
                   </div>
                 </div>
-                <div>
-                  <label className={labelClass}>Gender</label>
-                  <select value={gender} onChange={(e) => setGender(e.target.value)} className={selectClass} required>
+
+                <div className="form-group">
+                  <label className="form-label">Gender</label>
+                  <select value={gender} onChange={(e) => setGender(e.target.value)} className="form-input bg-white" required>
                     <option value="" disabled>Select Gender</option>
                     {GENDER_OPTIONS.map(g => <option key={g} value={g}>{g}</option>)}
                   </select>
                 </div>
-                <div>
-                  <label className={labelClass}>Department</label>
-                  <select value={department} onChange={(e) => setDepartment(e.target.value)} className={selectClass} required>
+
+                <div className="form-group">
+                  <label className="form-label">Department</label>
+                  <select value={department} onChange={(e) => setDepartment(e.target.value)} className="form-input bg-white" required>
                     <option value="" disabled>Select Department</option>
                     {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
                   </select>
                 </div>
-                <div>
-                  <label className={labelClass}>Program</label>
-                  <select value={program} onChange={(e) => setProgram(e.target.value)} className={selectClass} required>
+
+                <div className="form-group">
+                  <label className="form-label">Program</label>
+                  <select value={program} onChange={(e) => setProgram(e.target.value)} className="form-input bg-white" required>
                     <option value="" disabled>Select Program</option>
                     {PROGRAMS.map(p => <option key={p} value={p}>{p}</option>)}
                   </select>
                 </div>
-                <div>
-                  <label className={labelClass}>Password</label>
+
+                <div className="form-group">
+                  <label className="form-label">Password</label>
                   <div className="relative">
-                    <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className={inputClass} required />
+                    <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                    <input type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="form-input pl-12" required />
                   </div>
                 </div>
-                <div>
-                  <label className={labelClass}>Confirm Password</label>
+
+                <div className="form-group">
+                  <label className="form-label">Confirm Password</label>
                   <div className="relative">
-                    <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input type="password" placeholder="••••••••" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className={inputClass} required />
+                    <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                    <input type="password" placeholder="••••••••" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="form-input pl-12" required />
                   </div>
                 </div>
 
                 <button 
                   type="submit" 
                   disabled={loading} 
-                  className="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium h-12 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 mt-4 disabled:opacity-60 text-sm"
+                  className="btn btn-primary w-full mt-4"
                 >
-                  {loading ? <Loader2 size={16} className="animate-spin" /> : <><span>Create Student Account</span><ArrowRight size={16} /></>}
+                  {loading ? <Loader2 size={18} className="animate-spin" /> : <><span>Create Student Account</span><ArrowRight size={18} /></>}
                 </button>
 
-                <div className="text-center mt-5">
-                  <button type="button" onClick={() => setIsSignUp(false)} className="text-xs font-semibold text-blue-700 hover:text-blue-800 transition-colors">
-                    Already have an account? <span className="underline">Sign In</span>
+                <div className="text-center mt-6">
+                  <button type="button" onClick={() => setIsSignUp(false)} className="text-sm font-medium text-[#475569] hover:text-[#0F172A]">
+                    Already have an account? <span className="text-[#2563EB] font-semibold">Sign In</span>
                   </button>
                 </div>
               </form>
