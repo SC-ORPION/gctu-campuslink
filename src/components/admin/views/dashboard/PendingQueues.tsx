@@ -1,14 +1,22 @@
 import React from 'react';
 import { CreditCard, KeyRound } from 'lucide-react';
 
-export default function PendingQueues() {
+interface PendingQueuesProps {
+  unverifiedPayments?: number;
+  unassignedAllocations?: number;
+}
+
+export default function PendingQueues({
+  unverifiedPayments = 0,
+  unassignedAllocations = 0
+}: PendingQueuesProps) {
   const queues = [
-    { label: 'Unverified Payments', count: 18, icon: <CreditCard size={14} className="text-amber-400" />, href: '/admin/payments' },
-    { label: 'Unassigned Allocations', count: 9, icon: <KeyRound size={14} className="text-[#4a9eff]" />, href: '/admin/allocations' }
+    { label: 'Unverified Payments', count: unverifiedPayments, icon: <CreditCard size={14} className="text-amber-400" />, href: '/payments' },
+    { label: 'Unassigned Allocations', count: unassignedAllocations, icon: <KeyRound size={14} className="text-gold" />, href: '/allocations' }
   ];
 
   return (
-    <div className="bg-[#0a2240]/60 backdrop-blur-sm p-5 rounded-2xl border-t-4 border-t-blue-700 border border-[#1e5faf]/25 space-y-4">
+    <div className="bg-[#0a2240]/60 backdrop-blur-sm p-5 rounded-2xl border-t-4 border-t-gold border border-[#1e5faf]/25 space-y-4">
       <h3 className="text-[10px] font-extrabold text-slate-300 uppercase tracking-[0.1em]">Pending Queues</h3>
       
       <div className="space-y-2.5">
@@ -31,3 +39,4 @@ export default function PendingQueues() {
     </div>
   );
 }
+

@@ -16,11 +16,11 @@ export default function AdminSystemPage() {
       {/* Header Banner */}
       <div className="bg-[#0a2240]/60 backdrop-blur-sm p-6 rounded-2xl border border-[#1e5faf]/15 shadow-[0_4px_24px_rgba(0,0,0,0.3)] flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-            <Terminal className="text-indigo-600" size={24} />
-            <span>System Performance</span>
+          <h1 className="text-2xl font-black text-white flex items-center gap-2">
+            <Terminal className="text-gold" size={24} />
+            <span>System Diagnostics</span>
           </h1>
-          <p className="text-xs font-semibold text-slate-500 mt-1">Real-time status metrics of Supabase endpoints, servers, and processing latency.</p>
+          <p className="text-xs font-semibold text-slate-400 mt-1">Real-time status metrics of Supabase endpoints, servers, and processing latency.</p>
         </div>
       </div>
 
@@ -46,7 +46,7 @@ export default function AdminSystemPage() {
       {/* Audit Log Box */}
       <div className="bg-[#0a2240]/60 backdrop-blur-sm p-6 rounded-2xl border border-[#1e5faf]/15 shadow-[0_4px_24px_rgba(0,0,0,0.3)] space-y-4">
         <h3 className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
-          <Shield className="text-indigo-600" size={16} />
+          <Shield className="text-gold" size={16} />
           <span>Security Audit Trail</span>
         </h3>
         
@@ -54,7 +54,7 @@ export default function AdminSystemPage() {
           <div>[2026-05-25 15:08:04] AUTH: Admin session initialized dynamically from client source index.</div>
           <div>[2026-05-25 15:08:20] TRANSACTION: Supreme state stores updated successfully without sync drops.</div>
           <div>[2026-05-25 15:09:12] ENGINE: Room slip generation pipeline running in transaction-safe context.</div>
-          <div className="text-indigo-600">[2026-05-25 15:11:34] SYSTEM: Global variables matching production blueprints initialized cleanly.</div>
+          <div className="text-gold">[2026-05-25 15:11:34] SYSTEM: Global variables matching production blueprints initialized cleanly.</div>
         </div>
       </div>
     </div>
