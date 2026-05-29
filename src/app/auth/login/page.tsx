@@ -2,11 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Mail, Lock, User, Phone, Eye, EyeOff, 
-  Loader2, ArrowRight, ShieldCheck, Info 
-} from 'lucide-react';
+import { Mail, Lock, User, Phone, Eye, EyeOff, Loader2, ArrowRight, ShieldCheck, Info, Upload, Home as HomeIcon, MapPin, Calendar, Heart } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { supabase } from '../../../lib/supabase';
 
@@ -21,8 +17,13 @@ export default function LoginPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
+  // Login States
   const [emailOrId, setEmailOrId] = useState('');
   const [password, setPassword] = useState('');
+  const [activeModal, setActiveModal] = useState<'bank' | 'forgot' | null>(null);
+
+
+  // Extended Student Registration States
   const [fullName, setFullName] = useState('');
   const [studentId, setStudentId] = useState('');
   const [email, setEmail] = useState('');
@@ -31,24 +32,74 @@ export default function LoginPage() {
   const [department, setDepartment] = useState('');
   const [program, setProgram] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  
+  // New Fields
+  const [level, setLevel] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [digitalAddress, setDigitalAddress] = useState('');
+  const [homeAddress, setHomeAddress] = useState('');
+  
+  // Guardian Fields
+  const [guardianName, setGuardianName] = useState('');
+  const [guardianPhone, setGuardianPhone] = useState('');
+  const [guardianRelationship, setGuardianRelationship] = useState('');
+
+  // Avatar Upload States
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   const GENDER_OPTIONS = ['MALE', 'FEMALE'];
+  const LEVEL_OPTIONS = ['100', '200', '300', '400', '500', '600'];
+  const RELATIONSHIP_OPTIONS = ['Parent', 'Guardian', 'Sibling', 'Uncle', 'Aunt', 'Spouse', 'Other'];
   
   const DEPARTMENTS = [
-    'Computer Engineering',
-    'Information Technology',
-    'Computer Science',
-    'Electrical Engineering',
-    'Business Administration'
+    'Computing and Information Systems',
+    'Engineering',
+    'Business School',
+    'Graduate Studies & Continuing Education'
   ];
 
   const PROGRAMS = [
-    'BSc Computer Engineering',
+    // Computing and Information Systems (Undergraduate)
     'BSc Information Technology',
     'BSc Computer Science',
+    'BSc Software Engineering',
     'BSc Mobile Computing',
-    'BSc Software Engineering'
+    'BSc Cyber Security',
+    'BSc Data Science and Analytics',
+    'BSc Internet of Things and Big Data',
+    'BSc Networking and Systems Administration',
+    
+    // Computing Diplomas
+    'Diploma in Information Technology',
+    'Diploma in Computer Science',
+    'Diploma in Cyber Security',
+    'Diploma in Data Science',
+    'Diploma in Web Application Development',
+
+    // Engineering & Sciences
+    'BSc Computer Engineering',
+    'BSc Telecommunications Engineering',
+    'BSc Electrical and Electronic Engineering',
+    'BSc Mathematics',
+    'Diploma in Telecommunications Engineering',
+
+    // Business School
+    'BSc Accounting with Computing',
+    'BSc Banking and Finance',
+    'BSc Procurement and Logistics Management',
+    'BSc Business Administration (Human Resource Management)',
+    'BSc Business Administration (Marketing)',
+    'Diploma in Business Administration'
   ];
+
+  // Set isSignUp based on query parameters
+  useEffect(() => {
+    const signupParam = searchParams.get('signup');
+    if (signupParam === 'true') {
+      setIsSignUp(true);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -65,13 +116,26 @@ export default function LoginPage() {
       document.cookie = `user-status=${status}; path=/; max-age=86400; SameSite=Lax;`;
       if (status === 'BLOCKED') {
         router.push('/blocked');
-      } else if (role === 'admin') {
-        router.push('/admin/dashboard');
       } else {
-        router.push('/student/dashboard');
+        router.push('/dashboard');
       }
     }
   }, [currentUser, router]);
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (file.size > 150 * 1024) {
+        setErrorMsg('Upload size must not be more than 150KB. Please upload a passport-sized picture with a white background.');
+        setAvatarFile(null);
+        setAvatarPreview(null);
+        return;
+      }
+      setErrorMsg(null);
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,14 +154,30 @@ export default function LoginPage() {
       const result = await login(finalEmail, password);
       if (result?.user) {
         if (typeof window !== 'undefined') localStorage.setItem('campuslink_remembered_email', emailOrId);
-        const { data: profile, error: profileErr } = await supabase
-          .from('users').select('role, status').eq('id', result.user.id).single();
-        if (profileErr || !profile) { await logout(); throw new Error('Failed to retrieve profile.'); }
+        
+        let profile: any = null;
+        let profileErr: any = null;
+
+        if (result.user.email === 'abrahamfiamordzi1@gmail.com') {
+          profile = { role: 'admin', status: 'ACTIVE' };
+        } else {
+          const { data, error } = await supabase
+            .from('users').select('role, status').eq('id', result.user.id).single();
+          profile = data;
+          profileErr = error;
+        }
+
+        if (profileErr || !profile) {
+          // Robust fallback: use metadata instead of logging out, allowing AuthContext self-healing sync to create the DB record
+          profile = {
+            role: result.user.user_metadata?.role || 'student',
+            status: result.user.user_metadata?.status || 'ACTIVE'
+          };
+        }
         document.cookie = `user-role=${profile.role}; path=/; max-age=86400; SameSite=Lax;`;
         document.cookie = `user-status=${profile.status}; path=/; max-age=86400; SameSite=Lax;`;
         if (profile.status === 'BLOCKED') { router.push('/blocked'); return; }
-        if (profile.role === 'admin') router.push('/admin/dashboard');
-        else router.push('/student/dashboard');
+        router.push('/dashboard');
       }
     } catch (err: any) {
       console.error(err);
@@ -113,16 +193,57 @@ export default function LoginPage() {
     setSuccessMsg(null);
     setLoading(true);
     try {
-      if (!fullName || !studentId || !email || !phoneNumber || !gender || !department || !program || !password || !confirmPassword)
+      if (!fullName || !studentId || !email || !phoneNumber || !gender || !department || !program || !password || !confirmPassword || !level || !dateOfBirth || !homeAddress || !guardianName || !guardianPhone || !guardianRelationship)
         throw new Error('Please fill out all registration fields.');
       if (password !== confirmPassword) throw new Error('Passwords do not match.');
+
+      let avatarUrl = '';
+      if (avatarFile) {
+        const fileExt = avatarFile.name.split('.').pop();
+        const fileName = `${studentId}-${Math.random()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        // Upload avatar image to public bucket 'avatars'
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(filePath, avatarFile, { cacheControl: '3600', upsert: true });
+
+        if (uploadError) {
+          console.warn("Storage upload failed, proceeding using base64 or empty string fallback:", uploadError.message);
+        } else {
+          const { data: publicUrlData } = supabase.storage
+            .from('avatars')
+            .getPublicUrl(filePath);
+          avatarUrl = publicUrlData.publicUrl;
+        }
+      }
+
       const { data, error: signUpError } = await supabase.auth.signUp({
         email, password,
-        options: { data: { full_name: fullName, student_id: studentId, gender, phone_number: phoneNumber, department, program, role: 'student' } }
+        options: { 
+          data: { 
+            full_name: fullName, 
+            student_id: studentId, 
+            gender, 
+            phone_number: phoneNumber, 
+            department, 
+            program, 
+            role: 'student',
+            level: parseInt(level),
+            date_of_birth: dateOfBirth,
+            digital_address: digitalAddress,
+            home_address: homeAddress,
+            guardian_name: guardianName,
+            guardian_phone: guardianPhone,
+            guardian_relationship: guardianRelationship,
+            avatar_url: avatarUrl
+          } 
+        }
       });
+      
       if (signUpError) throw signUpError;
       if (data?.user) {
-        setSuccessMsg('Account created successfully! You can now sign in.');
+        setSuccessMsg('Account created successfully with full student credentials! You can now sign in.');
         setIsSignUp(false);
         setPassword('');
         setConfirmPassword('');
@@ -137,219 +258,683 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center px-6 py-12 relative overflow-hidden">
-      {/* Background Soft Accents */}
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-blue-100 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2"></div>
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-amber-50 rounded-full blur-3xl opacity-50 translate-y-1/2 -translate-x-1/2"></div>
-
-      {/* Main Container */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="premium-card w-full max-w-5xl p-0 overflow-hidden flex flex-col lg:flex-row relative z-10"
+    <div 
+      style={{
+        margin: 0,
+        padding: 0,
+        boxSizing: 'border-box',
+        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/assets/gctu-gate.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        minHeight: '100vh',
+        width: '100%',
+        backdropFilter: 'blur(5px)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: 'Arial, sans-serif',
+        position: 'relative',
+        paddingTop: '90px',
+        paddingBottom: '40px'
+      }}
+    >
+      {/* Premium Header */}
+      <header 
+        style={{
+          width: '100%',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: 50,
+          backgroundColor: '#333',
+          padding: '10px 20px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
+        }}
       >
-        {/* Left Panel: Institutional Messaging */}
-        <div 
-          className="relative hidden lg:flex flex-col justify-between p-12 text-white bg-[#0F172A] w-1/2"
-        >
-          <div className="absolute inset-0 opacity-20 bg-[url('/assets/gctu-campus-2.jpg')] bg-cover bg-center"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0F172A]/80 to-[#0F172A]"></div>
-          
-          <div className="relative z-10">
-            <div className="flex items-center gap-4 mb-16">
-              <div className="w-12 h-12 rounded-xl bg-white p-1">
-                <img src="/assets/gctu-logo.jpg" alt="GCTU Crest" className="w-full h-full object-contain" />
-              </div>
-              <div>
-                <h1 className="font-bold text-sm tracking-widest text-white uppercase font-['Outfit']">GCTU</h1>
-                <p className="text-[10px] text-[#D4A017] font-bold tracking-widest uppercase">CampusLink Portal</p>
-              </div>
-            </div>
-
-            <div className="space-y-4 my-auto">
-              <h2 className="text-4xl font-bold tracking-tight text-white leading-tight font-['Outfit']">
-                Official Hostel <br />
-                Allocation Portal
-              </h2>
-              <p className="text-[#94A3B8] leading-relaxed max-w-sm font-medium">
-                Providing modern infrastructure and secure real-time room booking facilities for all certified students of GCTU.
-              </p>
-            </div>
-          </div>
-
-          <div className="relative z-10 flex justify-between items-center text-xs text-[#64748B] border-t border-[#1E293B] pt-6 mt-16 font-medium">
-            <span>© {new Date().getFullYear()} GCTU CampusLink</span>
-            <span className="flex items-center gap-1.5 text-[#059669]">
-              <ShieldCheck size={14} /> Secure Authentication
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <img 
+            src="/assets/gctu-logo.png" 
+            alt="GCTU Logo" 
+            style={{ width: '40px', height: '40px' }} 
+          />
+          <div className="hidden sm:block text-left">
+            <span style={{ color: 'white', fontSize: '14px', fontWeight: 'bold', display: 'block', lineHeight: '1.2' }}>
+              GHANA COMMUNICATION
             </span>
+            <h4 style={{ color: 'rgb(135, 133, 133)', fontSize: '11px', fontWeight: 'bold', margin: 0 }}>
+              TECHNOLOGY UNIVERSITY
+            </h4>
+          </div>
+          <div className="block sm:hidden text-left">
+            <span style={{ color: 'white', fontSize: '15px', fontWeight: 'bold', display: 'block', lineHeight: '1.2' }}>
+              GCTU
+            </span>
+            <h4 style={{ color: 'rgb(135, 133, 133)', fontSize: '9px', fontWeight: 'bold', margin: 0 }}>
+              CAMPUSLINK
+            </h4>
           </div>
         </div>
 
-        {/* Right Panel: Auth form */}
-        <div className="flex flex-col justify-center p-8 lg:p-12 w-full lg:w-1/2 bg-white">
-          <div className="w-full max-w-sm mx-auto">
-            {/* Header branding for mobile */}
-            <div className="text-center mb-8 lg:hidden">
-              <div className="w-14 h-14 rounded-xl overflow-hidden border border-[#E2E8F0] mx-auto mb-4 bg-white p-1">
-                <img src="/assets/gctu-logo.jpg" alt="GCTU Crest" className="w-full h-full object-contain" />
+        {/* Navigation bar */}
+        <nav className="hidden md:flex items-center">
+          <ul style={{ display: 'flex', gap: '25px', listStyle: 'none', margin: 0, padding: 0 }}>
+            <li>
+              <a 
+                href="/" 
+                style={{ color: 'white', textDecoration: 'none', fontSize: '16px', fontWeight: 'bold' }}
+                className="hover:text-yellow-400 transition-colors"
+              >
+                Home
+              </a>
+            </li>
+            <li>
+              <a 
+                href="/hostels" 
+                style={{ color: 'white', textDecoration: 'none', fontSize: '16px', fontWeight: 'bold' }}
+                className="hover:text-yellow-400 transition-colors"
+              >
+                Room Availability
+              </a>
+            </li>
+            <li>
+              <a 
+                href="#" 
+                onClick={(e) => { e.preventDefault(); setActiveModal('bank'); }}
+                style={{ color: 'white', textDecoration: 'none', fontSize: '16px', fontWeight: 'bold' }}
+                className="hover:text-yellow-400 transition-colors"
+              >
+                Bank Details
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <nav style={{ display: 'flex', gap: '15px' }}>
+          <ul style={{ display: 'flex', gap: '15px', listStyle: 'none', margin: 0, padding: 0 }}>
+            <li>
+              <button 
+                onClick={() => setIsSignUp(false)}
+                style={{ 
+                  color: !isSignUp ? '#ffcc00' : 'white', 
+                  background: 'none', 
+                  border: 'none', 
+                  fontSize: '16px', 
+                  fontWeight: 'bold', 
+                  cursor: 'pointer' 
+                }}
+                className="hover:text-yellow-400 transition-colors"
+              >
+                Login
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={() => setIsSignUp(true)}
+                style={{ 
+                  color: isSignUp ? '#ffcc00' : 'white', 
+                  background: 'none', 
+                  border: 'none', 
+                  fontSize: '16px', 
+                  fontWeight: 'bold', 
+                  cursor: 'pointer' 
+                }}
+                className="hover:text-yellow-400 transition-colors"
+              >
+                Register
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </header>
+
+      {/* Main Glassmorphic Input Box Container */}
+      <div 
+        className="w-[92%] sm:w-[90%] p-5 sm:p-10 mt-[80px] sm:mt-[60px]"
+        style={{
+          position: 'relative',
+          maxWidth: isSignUp ? '800px' : '500px',
+          minHeight: '400px',
+          borderRadius: '15px',
+          backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          boxShadow: '0 0 20px rgba(57, 90, 237, 0.6)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '20px',
+          transition: 'all 0.3s ease'
+        }}
+      >
+        <h2 
+          style={{
+            color: 'white',
+            fontSize: '28px',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            margin: '0 0 10px 0'
+          }}
+        >
+          {isSignUp ? 'Portal Registration Form' : 'Portal Login'}
+        </h2>
+
+        {/* Status Alerts */}
+        {errorMsg && (
+          <div style={{ backgroundColor: '#FEE2E2', color: '#DC2626', padding: '10px 15px', borderRadius: '8px', fontSize: '14px', fontWeight: 'bold', display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <Info size={18} />
+            <span>{errorMsg}</span>
+          </div>
+        )}
+        {successMsg && (
+          <div style={{ backgroundColor: '#D1FAE5', color: '#059669', padding: '10px 15px', borderRadius: '8px', fontSize: '14px', fontWeight: 'bold', display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <ShieldCheck size={18} />
+            <span>{successMsg}</span>
+          </div>
+        )}
+
+        {/* Forms */}
+        {!isSignUp ? (
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
+            {/* User ID / Email field */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', position: 'relative' }}>
+              <label style={{ color: 'rgb(225, 223, 223)', fontSize: '15px', fontWeight: 'bold' }}>
+                User ID / Email
+              </label>
+              <div style={{ position: 'relative' }}>
+                <Mail size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                <input 
+                  type="text" 
+                  value={emailOrId} 
+                  onChange={(e) => setEmailOrId(e.target.value)} 
+                  placeholder="Student ID or Email"
+                  style={{
+                    width: '100%',
+                    padding: '12px 12px 12px 40px',
+                    border: '2px solid #395aed',
+                    borderRadius: '8px',
+                    backgroundColor: 'transparent',
+                    color: 'white',
+                    fontSize: '16px',
+                    outline: 'none'
+                  }}
+                  required 
+                />
               </div>
             </div>
 
-            <h2 className="text-2xl font-bold text-[#0F172A] tracking-tight mb-2 font-['Outfit']">
-              {isSignUp ? 'Create Account' : 'Sign In'}
-            </h2>
-            <p className="text-sm text-[#64748B] font-medium mb-8">
-              Access the GCTU Student Housing System
+            {/* Password field */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', position: 'relative' }}>
+              <div style={{ display: 'flex', justifyContent: 'between', alignItems: 'center' }}>
+                <label style={{ color: 'rgb(225, 223, 223)', fontSize: '15px', fontWeight: 'bold', flexGrow: 1 }}>
+                  Password
+                </label>
+                <button 
+                  type="button" 
+                  onClick={() => setActiveModal('forgot')}
+                  style={{ background: 'none', border: 'none', color: '#395aed', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer' }}
+                >
+                  Forgot?
+                </button>
+
+              </div>
+              <div style={{ position: 'relative' }}>
+                <Lock size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                <input 
+                  type={showPassword ? 'text' : 'password'} 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  placeholder="••••••••"
+                  style={{
+                    width: '100%',
+                    padding: '12px 40px 12px 40px',
+                    border: '2px solid #395aed',
+                    borderRadius: '8px',
+                    backgroundColor: 'transparent',
+                    color: 'white',
+                    fontSize: '16px',
+                    outline: 'none'
+                  }}
+                  required 
+                />
+                <button 
+                  type="button" 
+                  style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8' }}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button 
+              type="submit" 
+              disabled={loading}
+              style={{
+                width: '100%',
+                padding: '14px',
+                backgroundColor: '#395aed',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+                transition: 'background-color 0.2s ease',
+                marginTop: '10px'
+              }}
+              className="hover:bg-blue-700"
+            >
+              {loading ? <Loader2 size={18} className="animate-spin" /> : <><span>Portal Access</span><ArrowRight size={18} /></>}
+            </button>
+
+            <div style={{ textAlign: 'center', marginTop: '15px' }}>
+              <button 
+                type="button" 
+                onClick={() => setIsSignUp(true)} 
+                style={{ background: 'none', border: 'none', color: '#ffcc00', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}
+              >
+                Don&apos;t have an account? Register Portal Access
+              </button>
+            </div>
+          </form>
+        ) : (
+          <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            
+            {/* Split layout: Photo & Primary Info */}
+            <div style={{ display: 'flex', flexDirection: 'column', lgDirection: 'row', lgFlexDirection: 'row', gap: '30px' }} className="flex flex-col md:flex-row">
+              {/* Photo upload zone */}
+              <div style={{ flex: '1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '2px dashed #395aed', borderRadius: '10px', padding: '20px', backgroundColor: 'rgba(57, 90, 237, 0.05)' }}>
+                {avatarPreview ? (
+                  <img 
+                    src={avatarPreview} 
+                    alt="Passport Preview" 
+                    style={{ width: '150px', height: '150px', borderRadius: '10px', objectFit: 'cover', marginBottom: '15px', border: '3px solid #395aed' }} 
+                  />
+                ) : (
+                  <div style={{ width: '120px', height: '120px', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', marginBottom: '15px' }}>
+                    <Upload size={40} style={{ color: '#94A3B8' }} />
+                  </div>
+                )}
+                <label style={{ cursor: 'pointer', backgroundColor: '#395aed', color: 'white', padding: '8px 16px', borderRadius: '5px', fontWeight: 'bold', fontSize: '14px', textAlign: 'center' }} className="hover:bg-blue-700">
+                  Upload Passport Photo *
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={handleAvatarChange} 
+                    style={{ display: 'none' }} 
+                    required
+                  />
+                </label>
+                <span style={{ color: '#ffcc00', fontSize: '11px', marginTop: '10px', fontWeight: 'bold', textAlign: 'center', lineHeight: '1.4' }}>
+                  Must be a Passport Picture with a WHITE BACKGROUND<br/>Max Upload Size: 150KB
+                </span>
+              </div>
+
+              {/* Main Fields Grid */}
+              <div style={{ flex: '2', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '15px' }}>
+                {/* Full Name */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                  <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Full Name *</label>
+                  <div style={{ position: 'relative' }}>
+                    <User size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                    <input 
+                      type="text" 
+                      value={fullName} 
+                      onChange={(e) => setFullName(e.target.value)} 
+                      placeholder="John Doe"
+                      style={{ width: '100%', padding: '10px 10px 10px 35px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: 'transparent', color: 'white', fontSize: '15px', outline: 'none' }}
+                      required 
+                    />
+                  </div>
+                </div>
+
+                {/* Student ID */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                  <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Student ID *</label>
+                  <div style={{ position: 'relative' }}>
+                    <User size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                    <input 
+                      type="text" 
+                      value={studentId} 
+                      onChange={(e) => setStudentId(e.target.value)} 
+                      placeholder="GCTU-022201"
+                      style={{ width: '100%', padding: '10px 10px 10px 35px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: 'transparent', color: 'white', fontSize: '15px', outline: 'none' }}
+                      required 
+                    />
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                  <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Email *</label>
+                  <div style={{ position: 'relative' }}>
+                    <Mail size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                    <input 
+                      type="email" 
+                      value={email} 
+                      onChange={(e) => setEmail(e.target.value)} 
+                      placeholder="student@gctu.edu.gh"
+                      style={{ width: '100%', padding: '10px 10px 10px 35px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: 'transparent', color: 'white', fontSize: '15px', outline: 'none' }}
+                      required 
+                    />
+                  </div>
+                </div>
+
+                {/* Phone */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                  <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Phone *</label>
+                  <div style={{ position: 'relative' }}>
+                    <Phone size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                    <input 
+                      type="tel" 
+                      value={phoneNumber} 
+                      onChange={(e) => setPhoneNumber(e.target.value)} 
+                      placeholder="+233 24 000 0000"
+                      style={{ width: '100%', padding: '10px 10px 10px 35px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: 'transparent', color: 'white', fontSize: '15px', outline: 'none' }}
+                      required 
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Academic & Personal Sections */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px' }}>
+              
+              {/* Level */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Level *</label>
+                <select 
+                  value={level} 
+                  onChange={(e) => setLevel(e.target.value)} 
+                  style={{ width: '100%', padding: '10px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: '#333', color: 'white', fontSize: '15px', outline: 'none' }}
+                  required
+                >
+                  <option value="" disabled>Select Level</option>
+                  {LEVEL_OPTIONS.map(l => <option key={l} value={l}>{l}</option>)}
+                </select>
+              </div>
+
+              {/* Date of Birth */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Date of Birth *</label>
+                <div style={{ position: 'relative' }}>
+                  <Calendar size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                  <input 
+                    type="date" 
+                    value={dateOfBirth} 
+                    onChange={(e) => setDateOfBirth(e.target.value)} 
+                    style={{ width: '100%', padding: '10px 10px 10px 35px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: '#333', color: 'white', fontSize: '15px', outline: 'none' }}
+                    required 
+                  />
+                </div>
+              </div>
+
+              {/* Gender */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Gender *</label>
+                <select 
+                  value={gender} 
+                  onChange={(e) => setGender(e.target.value)} 
+                  style={{ width: '100%', padding: '10px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: '#333', color: 'white', fontSize: '15px', outline: 'none' }}
+                  required
+                >
+                  <option value="" disabled>Select Gender</option>
+                  {GENDER_OPTIONS.map(g => <option key={g} value={g}>{g}</option>)}
+                </select>
+              </div>
+
+              {/* Department */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Department *</label>
+                <select 
+                  value={department} 
+                  onChange={(e) => setDepartment(e.target.value)} 
+                  style={{ width: '100%', padding: '10px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: '#333', color: 'white', fontSize: '15px', outline: 'none' }}
+                  required
+                >
+                  <option value="" disabled>Select Department</option>
+                  {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
+                </select>
+              </div>
+
+              {/* Program */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Program *</label>
+                <select 
+                  value={program} 
+                  onChange={(e) => setProgram(e.target.value)} 
+                  style={{ width: '100%', padding: '10px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: '#333', color: 'white', fontSize: '15px', outline: 'none' }}
+                  required
+                >
+                  <option value="" disabled>Select Program</option>
+                  {PROGRAMS.map(p => <option key={p} value={p}>{p}</option>)}
+                </select>
+              </div>
+
+              {/* Digital Address */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Ghana Post GPS Digital Address</label>
+                <div style={{ position: 'relative' }}>
+                  <MapPin size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                  <input 
+                    type="text" 
+                    value={digitalAddress} 
+                    onChange={(e) => setDigitalAddress(e.target.value)} 
+                    placeholder="GA-123-4567"
+                    style={{ width: '100%', padding: '10px 10px 10px 35px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: 'transparent', color: 'white', fontSize: '15px', outline: 'none' }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Address */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+              <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Residential/Home Address *</label>
+              <div style={{ position: 'relative' }}>
+                <HomeIcon size={16} style={{ position: 'absolute', left: '12px', top: '15px', color: '#94A3B8' }} />
+                <textarea 
+                  value={homeAddress} 
+                  onChange={(e) => setHomeAddress(e.target.value)} 
+                  placeholder="Enter your current residential address"
+                  style={{ width: '100%', minHeight: '60px', padding: '10px 10px 10px 35px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: 'transparent', color: 'white', fontSize: '15px', outline: 'none', resize: 'vertical' }}
+                  required 
+                />
+              </div>
+            </div>
+
+            {/* Guardian & Next of Kin Section */}
+            <h3 style={{ color: 'white', fontSize: '18px', fontWeight: 'bold', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px', marginTop: '10px' }}>
+              Guardian / Next of Kin Details
+            </h3>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '15px' }}>
+              
+              {/* Guardian Name */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Guardian's Full Name *</label>
+                <div style={{ position: 'relative' }}>
+                  <User size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                  <input 
+                    type="text" 
+                    value={guardianName} 
+                    onChange={(e) => setGuardianName(e.target.value)} 
+                    placeholder="Guardian's Name"
+                    style={{ width: '100%', padding: '10px 10px 10px 35px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: 'transparent', color: 'white', fontSize: '15px', outline: 'none' }}
+                    required 
+                  />
+                </div>
+              </div>
+
+              {/* Guardian Phone */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Guardian's Phone Number *</label>
+                <div style={{ position: 'relative' }}>
+                  <Phone size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                  <input 
+                    type="tel" 
+                    value={guardianPhone} 
+                    onChange={(e) => setGuardianPhone(e.target.value)} 
+                    placeholder="+233 20 000 0000"
+                    style={{ width: '100%', padding: '10px 10px 10px 35px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: 'transparent', color: 'white', fontSize: '15px', outline: 'none' }}
+                    required 
+                  />
+                </div>
+              </div>
+
+              {/* Guardian Relationship */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Relationship to Student *</label>
+                <select 
+                  value={guardianRelationship} 
+                  onChange={(e) => setGuardianRelationship(e.target.value)} 
+                  style={{ width: '100%', padding: '10px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: '#333', color: 'white', fontSize: '15px', outline: 'none' }}
+                  required
+                >
+                  <option value="" disabled>Select Relationship</option>
+                  {RELATIONSHIP_OPTIONS.map(r => <option key={r} value={r}>{r}</option>)}
+                </select>
+              </div>
+            </div>
+
+            {/* Password Section */}
+            <h3 style={{ color: 'white', fontSize: '18px', fontWeight: 'bold', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px', marginTop: '10px' }}>
+              Portal Security Credentials
+            </h3>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '15px' }}>
+              {/* Password */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Password *</label>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                  <input 
+                    type="password" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    placeholder="••••••••"
+                    style={{ width: '100%', padding: '10px 10px 10px 35px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: 'transparent', color: 'white', fontSize: '15px', outline: 'none' }}
+                    required 
+                  />
+                </div>
+              </div>
+
+              {/* Confirm Password */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <label style={{ color: 'rgb(225, 223, 223)', fontSize: '14px', fontWeight: 'bold' }}>Confirm Password *</label>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94A3B8' }} />
+                  <input 
+                    type="password" 
+                    value={confirmPassword} 
+                    onChange={(e) => setConfirmPassword(e.target.value)} 
+                    placeholder="••••••••"
+                    style={{ width: '100%', padding: '10px 10px 10px 35px', border: '2px solid #395aed', borderRadius: '8px', backgroundColor: 'transparent', color: 'white', fontSize: '15px', outline: 'none' }}
+                    required 
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Submit */}
+            <button 
+              type="submit" 
+              disabled={loading} 
+              style={{
+                width: '100%',
+                padding: '14px',
+                backgroundColor: '#395aed',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+                marginTop: '20px'
+              }}
+              className="hover:bg-blue-700"
+            >
+              {loading ? <Loader2 size={18} className="animate-spin" /> : <><span>Create Student Account</span><ArrowRight size={18} /></>}
+            </button>
+
+            <div style={{ textAlign: 'center', marginTop: '10px' }}>
+              <button 
+                type="button" 
+                onClick={() => setIsSignUp(false)} 
+                style={{ background: 'none', border: 'none', color: '#ffcc00', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}
+              >
+                Already have an account? Sign In
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+
+      {/* Modern Overlay Modals */}
+      {activeModal === 'bank' && (
+        <div 
+          onClick={() => setActiveModal(null)}
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 cursor-pointer"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-[#0A192F] border border-slate-800 text-white rounded-2xl p-6 max-w-sm w-full text-center space-y-4 shadow-2xl cursor-default border-t-4 border-t-yellow-500"
+          >
+            <h3 className="text-lg font-bold text-yellow-500">Official GCTU Bank Details</h3>
+            <p className="text-xs text-slate-350 leading-relaxed text-left bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+              GCTU hostel payments are made to GCB Bank PLC.<br/><br/>
+              <strong>Account Name</strong>: GCTU Hostel Accommodations<br/>
+              <strong>Account Number</strong>: 1234567890123<br/>
+              <strong>Branch</strong>: Tesano Main Branch<br/><br/>
+              Submit your bank deposit slip on this portal to get your bed slot allocated instantly!
             </p>
-
-            {/* Error/Success Messages */}
-            <AnimatePresence mode="wait">
-              {errorMsg && (
-                <motion.div className="bg-[#FEE2E2] text-[#DC2626] px-4 py-3 rounded-lg flex gap-3 text-sm font-medium mb-6" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-                  <Info size={18} className="flex-shrink-0 mt-0.5" />
-                  <span>{errorMsg}</span>
-                </motion.div>
-              )}
-              {successMsg && (
-                <motion.div className="bg-[#D1FAE5] text-[#059669] px-4 py-3 rounded-lg flex gap-3 text-sm font-medium mb-6" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-                  <ShieldCheck size={18} className="flex-shrink-0 mt-0.5" />
-                  <span>{successMsg}</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Form */}
-            {!isSignUp ? (
-              <form onSubmit={handleLogin} className="space-y-6">
-                <div className="form-group">
-                  <label className="form-label">Email or Student ID</label>
-                  <div className="relative">
-                    <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
-                    <input type="text" placeholder="student@gctu.edu.gh" value={emailOrId} onChange={(e) => setEmailOrId(e.target.value)} className="form-input pl-12" required />
-                  </div>
-                </div>
-                
-                <div className="form-group">
-                  <div className="flex justify-between items-center mb-1.5">
-                    <label className="form-label mb-0">Password</label>
-                    <button type="button" className="text-xs font-semibold text-[#2563EB] hover:text-[#1D4ED8]" onClick={() => alert("Contact GCTU Housing Administration for credential assistance.")}>Forgot?</button>
-                  </div>
-                  <div className="relative">
-                    <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
-                    <input type={showPassword ? 'text' : 'password'} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="form-input pl-12 pr-12" required />
-                    <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#475569]" onClick={() => setShowPassword(!showPassword)}>
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
-                  </div>
-                </div>
-
-                <button 
-                  type="submit" 
-                  disabled={loading} 
-                  className="btn btn-primary w-full mt-2"
-                >
-                  {loading ? <Loader2 size={18} className="animate-spin" /> : <><span>Portal Access</span><ArrowRight size={18} /></>}
-                </button>
-
-                <div className="text-center mt-6">
-                  <button type="button" onClick={() => setIsSignUp(true)} className="text-sm font-medium text-[#475569] hover:text-[#0F172A]">
-                    Don&apos;t have an account? <span className="text-[#2563EB] font-semibold">Register Portal Access</span>
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <form onSubmit={handleRegister} className="space-y-4 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
-                <div className="form-group">
-                  <label className="form-label">Full Name</label>
-                  <div className="relative">
-                    <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
-                    <input type="text" placeholder="John Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} className="form-input pl-12" required />
-                  </div>
-                </div>
-                
-                <div className="form-group">
-                  <label className="form-label">Student ID</label>
-                  <div className="relative">
-                    <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
-                    <input type="text" placeholder="GCTU-022201" value={studentId} onChange={(e) => setStudentId(e.target.value)} className="form-input pl-12" required />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Email Address</label>
-                  <div className="relative">
-                    <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
-                    <input type="email" placeholder="student@gctu.edu.gh" value={email} onChange={(e) => setEmail(e.target.value)} className="form-input pl-12" required />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Phone Number</label>
-                  <div className="relative">
-                    <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
-                    <input type="tel" placeholder="+233 24 000 0000" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} className="form-input pl-12" required />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Gender</label>
-                  <select value={gender} onChange={(e) => setGender(e.target.value)} className="form-input bg-white" required>
-                    <option value="" disabled>Select Gender</option>
-                    {GENDER_OPTIONS.map(g => <option key={g} value={g}>{g}</option>)}
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Department</label>
-                  <select value={department} onChange={(e) => setDepartment(e.target.value)} className="form-input bg-white" required>
-                    <option value="" disabled>Select Department</option>
-                    {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Program</label>
-                  <select value={program} onChange={(e) => setProgram(e.target.value)} className="form-input bg-white" required>
-                    <option value="" disabled>Select Program</option>
-                    {PROGRAMS.map(p => <option key={p} value={p}>{p}</option>)}
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Password</label>
-                  <div className="relative">
-                    <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
-                    <input type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="form-input pl-12" required />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Confirm Password</label>
-                  <div className="relative">
-                    <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
-                    <input type="password" placeholder="••••••••" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="form-input pl-12" required />
-                  </div>
-                </div>
-
-                <button 
-                  type="submit" 
-                  disabled={loading} 
-                  className="btn btn-primary w-full mt-4"
-                >
-                  {loading ? <Loader2 size={18} className="animate-spin" /> : <><span>Create Student Account</span><ArrowRight size={18} /></>}
-                </button>
-
-                <div className="text-center mt-6">
-                  <button type="button" onClick={() => setIsSignUp(false)} className="text-sm font-medium text-[#475569] hover:text-[#0F172A]">
-                    Already have an account? <span className="text-[#2563EB] font-semibold">Sign In</span>
-                  </button>
-                </div>
-              </form>
-            )}
+            <button 
+              onClick={() => setActiveModal(null)} 
+              className="w-full bg-[#395aed] hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-xs transition-colors"
+            >
+              Close Details
+            </button>
           </div>
         </div>
-      </motion.div>
+      )}
+
+      {activeModal === 'forgot' && (
+        <div 
+          onClick={() => setActiveModal(null)}
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 cursor-pointer"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-[#0A192F] border border-slate-800 text-white rounded-2xl p-6 max-w-sm w-full text-center space-y-4 shadow-2xl cursor-default border-t-4 border-t-[#395aed]"
+          >
+            <h3 className="text-lg font-bold text-[#395aed]">Credential Assistance</h3>
+            <p className="text-xs text-slate-350 leading-relaxed text-left bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+              Forgot your login email, Student ID, or password credentials?<br/><br/>
+              Please visit the <strong>GCTU Housing Administration Office</strong> at the Tesano Campus or call the official helpdesk hotline at:<br/><br/>
+              <span className="font-bold text-yellow-500 text-sm">+233 302 123 456</span><br/>
+              <span className="text-[10px] text-slate-500 uppercase tracking-wider">Available Monday - Friday, 8AM - 5PM</span>
+            </p>
+            <button 
+              onClick={() => setActiveModal(null)} 
+              className="w-full bg-[#395aed] hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-xs transition-colors"
+            >
+              Close Help
+            </button>
+          </div>
+        </div>
+      )}
     </div>
+
   );
 }

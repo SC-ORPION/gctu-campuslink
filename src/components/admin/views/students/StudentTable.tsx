@@ -1,5 +1,5 @@
 import React from 'react';
-import { Ban, Unlock, Trash2, Eye } from 'lucide-react';
+import { Ban, Unlock, Trash2, Eye, User } from 'lucide-react';
 
 interface Student {
   id: string;
@@ -9,6 +9,8 @@ interface Student {
   gender: string;
   status: string;
   bookings: any[];
+  avatar_url?: string;
+  level?: number;
 }
 
 interface StudentTableProps {
@@ -42,7 +44,21 @@ export default function StudentTable({
             const activeBooking = s.bookings?.find((b: any) => b.status !== 'CANCELLED');
             return (
               <tr key={s.id}>
-                <td className="font-semibold text-[#0F172A]">{s.full_name}</td>
+                <td className="font-semibold text-[#0F172A]">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full overflow-hidden border border-slate-200 bg-slate-100 flex-shrink-0 flex items-center justify-center">
+                      {s.avatar_url ? (
+                        <img src={s.avatar_url} alt={s.full_name} className="w-full h-full object-cover" />
+                      ) : (
+                        <User size={14} className="text-slate-400" />
+                      )}
+                    </div>
+                    <div>
+                      <div className="font-bold text-slate-900 leading-none mb-1">{s.full_name}</div>
+                      <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider leading-none">Level {s.level || '100'}</div>
+                    </div>
+                  </div>
+                </td>
                 <td className="font-mono text-[#64748B] text-xs">{s.student_id || 'N/A'}</td>
                 <td className="uppercase text-[#475569]">{s.gender || 'N/A'}</td>
                 <td>

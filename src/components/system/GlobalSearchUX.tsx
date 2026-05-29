@@ -22,6 +22,8 @@ export default function GlobalSearchUX() {
   const { user } = useAuth();
   
   const [query, setQuery] = useState('');
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Command K trigger
@@ -44,36 +46,73 @@ export default function GlobalSearchUX() {
     if (searchOpen) {
       setTimeout(() => inputRef.current?.focus(), 100);
       setQuery('');
+      setResults([]);
     }
   }, [searchOpen]);
 
-  // Simulated search data
-  const mockDataset: SearchResult[] = [
-    { id: 'h1', title: 'Dr. Hilla Limann Hall', category: 'hostels', subtitle: 'Main Campus - 120 rooms remaining', url: '/student/hostels' },
-    { id: 'h2', title: 'Prof. Alabi Hostel', category: 'hostels', subtitle: 'Off Campus - Premium rooms', url: '/student/hostels' },
-    { id: 's1', title: 'Abraham Doe', category: 'students', subtitle: 'GCTU002401 - Active Student profile', url: '/admin/students' },
-    { id: 's2', title: 'Sarah Lamptey', category: 'students', subtitle: 'GCTU003921 - Pending Verification', url: '/admin/students' },
-    { id: 'p1', title: 'GCTU-2026-092 Slip', category: 'payments', subtitle: 'Abraham Doe - GHC 4,500.00 verified', url: '/admin/payments' },
-    { id: 'p2', title: 'GCTU-2026-104 Slip', category: 'payments', subtitle: 'Sarah Lamptey - GHC 4,500.00 pending', url: '/admin/payments' },
-    { id: 'r1', title: 'Limann Hall - Room 402', category: 'rooms', subtitle: '4-in-1 room (3/4 occupied)', url: '/admin/allocations' },
-    { id: 'r2', title: 'Alabi Hall - Room 102', category: 'rooms', subtitle: '2-in-1 premium room (1/2 occupied)', url: '/admin/allocations' },
-  ];
+  // Dynamic search fetch from Supabase (Debounced 300ms)
+  useEffect(() => {
+    if (query.trim() === '') {
+      setResults([]);
+      return;
+    }
 
-  // Filter based on query & role (only admins can search administrative categories)
-  const filteredResults = query.trim() === '' 
-    ? [] 
-    : mockDataset.filter(item => {
-        const matchesQuery = item.title.toLowerCase().includes(query.toLowerCase()) || 
-                             item.subtitle.toLowerCase().includes(query.toLowerCase()) ||
-                             item.category.toLowerCase().includes(query.toLowerCase());
-        
-        if (user?.role === 'admin') {
-          return matchesQuery;
-        } else {
-          // Students can only search hostels and room slips
-          return matchesQuery && (item.category === 'hostels' || item.category === 'rooms');
+    const delayDebounce = setTimeout(async () => {
+      setSearchLoading(true);
+      try {
+        const foundResults: SearchResult[] = [];
+
+        // 1. Search Hostels (Visible to both students & admins)
+        const { data: hostelsData } = await supabase
+          .from('hostels')
+          .select('id, name, campus')
+          .ilike('name', `%${query}%`)
+          .limit(4);
+
+        if (hostelsData) {
+          hostelsData.forEach(h => {
+            foundResults.push({
+              id: h.id,
+              title: h.name,
+              category: 'hostels',
+              subtitle: `${h.campus || 'Tesano'} Campus — Click to browse`,
+              url: `/hostels`
+            });
+          });
         }
-      });
+
+        // 2. Search Students & Index numbers (Admin only)
+        if (user?.role === 'admin') {
+          const { data: studentsData } = await supabase
+            .from('users')
+            .select('id, full_name, student_id, level')
+            .eq('role', 'student')
+            .or(`full_name.ilike.%${query}%,student_id.ilike.%${query}%`)
+            .limit(5);
+
+          if (studentsData) {
+            studentsData.forEach(s => {
+              foundResults.push({
+                id: s.id,
+                title: s.full_name,
+                category: 'students',
+                subtitle: `${s.student_id || 'Index ID N/A'} — Level ${s.level || '100'} Student`,
+                url: `/students`
+              });
+            });
+          }
+        }
+
+        setResults(foundResults);
+      } catch (err) {
+        console.error('[Global Search Fetch issue]', err);
+      } finally {
+        setSearchLoading(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounce);
+  }, [query, user]);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -105,7 +144,7 @@ export default function GlobalSearchUX() {
             exit={{ opacity: 0, scale: 0.96, y: -20 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
           >
-            {/* Search Input Box */}
+             {/* Search Input Box */}
             <div className="relative border-b border-[#1e5faf]/15 dark:border-zinc-800 flex items-center px-4 py-4">
               <Search size={18} className="text-slate-400 dark:text-zinc-500 mr-3" />
               <input 
@@ -116,12 +155,16 @@ export default function GlobalSearchUX() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
-              <button 
-                onClick={() => setSearchOpen(false)}
-                className="p-1 rounded-md hover:bg-[#0f3058]/30 dark:hover:bg-zinc-800 text-slate-400 dark:text-zinc-500"
-              >
-                <X size={16} />
-              </button>
+              {searchLoading ? (
+                <Loader2 className="animate-spin text-[#d4af37] mr-3" size={16} />
+              ) : (
+                <button 
+                  onClick={() => setSearchOpen(false)}
+                  className="p-1 rounded-md hover:bg-[#0f3058]/30 dark:hover:bg-zinc-800 text-slate-400 dark:text-zinc-500"
+                >
+                  <X size={16} />
+                </button>
+              )}
             </div>
 
             {/* Results Canvas */}
@@ -130,7 +173,12 @@ export default function GlobalSearchUX() {
                 <div className="py-8 text-center text-xs text-slate-400 dark:text-zinc-500 font-medium">
                   Type to start searching. Try searching <span className="underline">hostels</span> or halls.
                 </div>
-              ) : filteredResults.length === 0 ? (
+              ) : searchLoading ? (
+                <div className="py-12 flex flex-col items-center justify-center gap-2 text-xs text-slate-450 dark:text-zinc-500 font-bold uppercase tracking-wider">
+                  <Loader2 className="animate-spin text-[#d4af37]" size={20} />
+                  <span>Searching Database...</span>
+                </div>
+              ) : results.length === 0 ? (
                 <div className="py-8 text-center text-xs text-slate-400 dark:text-zinc-500 font-medium">
                   No records found matching "{query}"
                 </div>
@@ -138,7 +186,8 @@ export default function GlobalSearchUX() {
                 <div className="space-y-4 p-2">
                   {/* Category groupings */}
                   {['hostels', 'rooms', 'students', 'payments'].map(cat => {
-                    const items = filteredResults.filter(r => r.category === cat);
+                    const items = results.filter(r => r.category === cat);
+
                     if (items.length === 0) return null;
                     return (
                       <div key={cat} className="space-y-1">
